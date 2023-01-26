@@ -4,6 +4,13 @@ import StravaLogin from './StravaLogin';
 import { MemoryRouter } from 'react-router-dom';
 import React from 'react';
 
+jest.mock('connectkit', () => ({
+  ConnectKitButton: () => {
+    const React = require('react');
+    return React.createElement('MockButton');
+  },
+}));
+
 beforeEach(() => {
   global.fetch = jest.fn(() =>
     Promise.resolve({

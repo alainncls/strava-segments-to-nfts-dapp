@@ -1,17 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { Container } from 'react-bootstrap';
-import { IActivity, IActivityData } from '../../types/activity';
+import { Activity } from '../../types/activity';
 import { ISegment } from '../../types/segment';
 import Loader from '../../components/Loader/Loader';
 import Header from '../../components/Header/Header';
 import Activities from '../../components/Activities/Activities';
 import MatchingSegmentsModal from '../../components/MatchingSegmentsModal/MatchingSegmentsModal';
-import StravaLoginButton from '../../components/StravaLoginButton/StravaLoginButton';
 import Footer from '../../components/Footer/Footer';
 
 const Home = () => {
   const [isLoading, setIsLoading] = useState(true);
-  const [activities, setActivities] = useState<IActivity[]>([]);
+  const [activities, setActivities] = useState<Activity[]>([]);
   const [refreshToken, setRefreshToken] = useState<string>();
   const [accessToken, setAccessToken] = useState<string>();
   const [tokenCreationDate, setTokenCreationDate] = useState<Date>();
@@ -79,29 +78,21 @@ const Home = () => {
     return tokenCreationDate && tokenCreationDate.getTime() > new Date().getTime() - 6 * 3600 * 1000;
   };
 
-  const checkForSegments = (activityId: string) => {
+  const checkForSegments = async (activityId: string) => {
     if (accessToken && isTokenValid()) {
       setIsLoading(true);
-      fetch(`${process.env.REACT_APP_SERVER_URL}/activities/${activityId}`, {
-        method: 'POST',
-        headers: new Headers({
-          'x-strava-token': accessToken,
-          'Content-Type': 'application/json',
-        }),
-      })
+
+      fetch(`https://www.strava.com/api/v3/activities/${activityId}?access_token=${accessToken}`)
         .then((res) => res.json())
-        .then((data: IActivityData) => {
-          if (data.activity?.matchingSegmentsIds.length) {
-            setCheckResults(
-              data.activity.matchingSegmentsIds.map((matchingSegmentId: number, index: number) => {
-                return {
-                  segmentId: matchingSegmentId,
-                  picture: data.activity.segmentsPictures[index],
-                };
-              }),
-            );
-            setShowModal(true);
-          }
+        .then((data) => {
+          setActivities(
+            activities.map((activity) => {
+              if (activity.id === activityId) {
+                activity.segments = data.segment_efforts;
+              }
+              return activity;
+            }),
+          );
         })
         .catch((e) => console.error(e))
         .finally(() => setIsLoading(false));
@@ -142,9 +133,8 @@ const Home = () => {
     <>
       <Loader loading={isLoading} />
       <Container className="p-3">
-        <Header />
+        <Header isStravaConnected={!!accessToken} />
         <div className={'mb-5'}>
-          {!accessToken && <StravaLoginButton />}
           {!!(accessToken && activities.length) && (
             <>
               <Activities activities={activities} checkForSegments={checkForSegments} />

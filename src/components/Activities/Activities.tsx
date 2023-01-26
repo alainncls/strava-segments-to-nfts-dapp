@@ -1,9 +1,9 @@
 import React from 'react';
 import { Button, Card } from 'react-bootstrap';
-import { IActivity } from '../../types/activity';
+import { Activity } from '../../types/activity';
 
 interface IProps {
-  activities: IActivity[];
+  activities: Activity[];
   checkForSegments: (activityId: string) => void;
 }
 
@@ -21,9 +21,12 @@ const Activities = (props: IProps) => {
               <div>{new Date(Date.parse(activity.start_date)).toLocaleDateString()}</div>
             </Card.Body>
             <Card.Footer>
-              <Button className="btn btn-primary btn-sm" onClick={() => checkForSegments(activity.id)}>
-                Check for eligible segments
-              </Button>
+              {!activity.segments && (
+                <Button className="btn btn-primary btn-sm" onClick={() => checkForSegments(activity.id)}>
+                  Check for eligible segments
+                </Button>
+              )}
+              {activity.segments && <>{activity.segments.length} segments</>}
             </Card.Footer>
           </Card>
         </div>

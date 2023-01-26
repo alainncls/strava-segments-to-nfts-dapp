@@ -1,4 +1,4 @@
-export interface IActivity {
+export interface Activity {
   id: string;
   stravaId: number;
   name: string;
@@ -7,8 +7,9 @@ export interface IActivity {
   segmentsPictures: string[];
   transactionsHashes: string[];
   start_date: string;
+  segments?: Segment[];
 }
 
-export interface IActivityData {
-  activity: IActivity;
+export interface Segment {
+  id: number;
 }
