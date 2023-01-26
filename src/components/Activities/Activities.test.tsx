@@ -1,9 +1,9 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import Activities from './Activities';
-import { IActivity } from '../../types/activity';
+import { Activity } from '../../types/activity';
 
-let activities: IActivity[];
+let activities: Activity[];
 let checkForSegments: (activityId: string) => void;
 
 beforeEach(() => {

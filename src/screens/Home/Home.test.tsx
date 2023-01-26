@@ -3,7 +3,7 @@ import '@testing-library/jest-dom';
 import { MemoryRouter } from 'react-router-dom';
 import React from 'react';
 import Home from './Home';
-import { IActivity } from '../../types/activity';
+import { Activity } from '../../types/activity';
 
 jest.mock('connectkit', () => ({
   ConnectKitButton: () => {
@@ -12,7 +12,7 @@ jest.mock('connectkit', () => ({
   },
 }));
 
-const activity1: IActivity = {
+const activity1: Activity = {
   id: 'ID 1',
   name: 'Activity 1',
   stravaId: 1234,
@@ -22,7 +22,7 @@ const activity1: IActivity = {
   segmentsPictures: ['ipfs://ipfsCID1'],
   transactionsHashes: ['0x12345'],
 };
-const activity2: IActivity = {
+const activity2: Activity = {
   id: 'ID 2',
   name: 'Activity 2',
   stravaId: 5678,
