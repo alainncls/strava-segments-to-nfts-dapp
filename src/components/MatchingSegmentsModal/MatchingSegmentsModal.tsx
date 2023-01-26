@@ -23,7 +23,10 @@ const MatchingSegmentsModal = (props: IProps) => {
             <h5>Segment #{result.segmentId}</h5>
             <img
               alt={`Segment ${result.segmentId}`}
-              src={`${result.picture.replace('ipfs://', 'https://ipfs.io/ipfs/')}`}
+              src={`${result.picture.replace(
+                'ipfs://',
+                'https://ipfs.io/ipfs/'
+              )}`}
               width={500}
             />
           </div>

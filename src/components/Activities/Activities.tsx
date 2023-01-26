@@ -18,11 +18,16 @@ const Activities = (props: IProps) => {
               <Card.Title>{activity.name}</Card.Title>
             </Card.Header>
             <Card.Body>
-              <div>{new Date(Date.parse(activity.start_date)).toLocaleDateString()}</div>
+              <div>
+                {new Date(Date.parse(activity.start_date)).toLocaleDateString()}
+              </div>
             </Card.Body>
             <Card.Footer>
               {!activity.segments && (
-                <Button className="btn btn-primary btn-sm" onClick={() => checkForSegments(activity.id)}>
+                <Button
+                  className="btn btn-primary btn-sm"
+                  onClick={() => checkForSegments(activity.id)}
+                >
                   Check for eligible segments
                 </Button>
               )}

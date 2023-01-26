@@ -8,7 +8,9 @@ const connectKitTestId = 'connect-kit-button';
 jest.mock('connectkit', () => ({
   ConnectKitButton: () => {
     const React = require('react');
-    return React.createElement('MockButton', { 'data-testid': connectKitTestId });
+    return React.createElement('MockButton', {
+      'data-testid': connectKitTestId,
+    });
   },
 }));
 

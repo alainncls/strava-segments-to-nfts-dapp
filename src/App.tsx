@@ -15,7 +15,7 @@ const client = createClient(
     appName: 'Strava NFTs',
     infuraId,
     chains,
-  }),
+  })
 );
 
 function App() {

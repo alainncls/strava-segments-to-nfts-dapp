@@ -9,7 +9,12 @@ import './StravaLogin.css';
 const StravaLogin = () => {
   const query = useQueryParams();
   const navigate = useNavigate();
-  const targetScope = ['read', 'activity:read', 'activity:read_all', 'read_all'];
+  const targetScope = [
+    'read',
+    'activity:read',
+    'activity:read_all',
+    'read_all',
+  ];
 
   const [displayScopeError, setDisplayScopeError] = useState(false);
 
@@ -25,7 +30,7 @@ const StravaLogin = () => {
         `https://www.strava.com/api/v3/oauth/token?client_id=${clientID}&client_secret=${clientSecret}&code=${code}&grant_type=authorization_code`,
         {
           method: 'POST',
-        },
+        }
       )
         .then((res) => res.json())
         .then((result) => {
@@ -47,16 +52,26 @@ const StravaLogin = () => {
       return false;
     }
     const scopeArray = scope.split(',');
-    return scopeArray.length && targetScope.every((v) => scopeArray.includes(v));
+    return (
+      scopeArray.length && targetScope.every((v) => scopeArray.includes(v))
+    );
   };
 
   return (
     <>
       <ToastContainer className="p-3 toast-scope" position={'top-center'}>
-        <Toast show={displayScopeError} onClick={() => setDisplayScopeError(false)}>
+        <Toast
+          show={displayScopeError}
+          onClick={() => setDisplayScopeError(false)}
+        >
           <Toast.Body>
-            <p>The scope you authorized is not sufficient for the app to work</p>
-            <a className={'btn btn-primary d-flex justify-content-center'} href={'/'}>
+            <p>
+              The scope you authorized is not sufficient for the app to work
+            </p>
+            <a
+              className={'btn btn-primary d-flex justify-content-center'}
+              href={'/'}
+            >
               Retry
             </a>
           </Toast.Body>

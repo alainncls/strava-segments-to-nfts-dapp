@@ -25,7 +25,7 @@ const Home = () => {
         `https://www.strava.com/oauth/token?client_id=${clientID}&client_secret=${clientSecret}&refresh_token=${refreshToken}&grant_type=refresh_token`,
         {
           method: 'POST',
-        },
+        }
       )
         .then((res) => res.json())
         .then((result) => {
@@ -62,7 +62,9 @@ const Home = () => {
   useEffect(() => {
     if (accessToken && isTokenValid()) {
       setIsLoading(true);
-      fetch(`https://www.strava.com/api/v3/athlete/activities?access_token=${accessToken}`)
+      fetch(
+        `https://www.strava.com/api/v3/athlete/activities?access_token=${accessToken}`
+      )
         .then((res) => res.json())
         .then((data) => {
           setActivities(data);
@@ -75,14 +77,19 @@ const Home = () => {
   }, [accessToken, tokenCreationDate]);
 
   const isTokenValid = () => {
-    return tokenCreationDate && tokenCreationDate.getTime() > new Date().getTime() - 6 * 3600 * 1000;
+    return (
+      tokenCreationDate &&
+      tokenCreationDate.getTime() > new Date().getTime() - 6 * 3600 * 1000
+    );
   };
 
   const checkForSegments = async (activityId: string) => {
     if (accessToken && isTokenValid()) {
       setIsLoading(true);
 
-      fetch(`https://www.strava.com/api/v3/activities/${activityId}?access_token=${accessToken}`)
+      fetch(
+        `https://www.strava.com/api/v3/activities/${activityId}?access_token=${accessToken}`
+      )
         .then((res) => res.json())
         .then((data) => {
           setActivities(
@@ -91,7 +98,7 @@ const Home = () => {
                 activity.segments = data.segment_efforts;
               }
               return activity;
-            }),
+            })
           );
         })
         .catch((e) => console.error(e))
@@ -103,7 +110,9 @@ const Home = () => {
     if (accessToken && checkResults.length) {
       setIsLoading(true);
       const segmentsPictures = checkResults.map((result) => result.picture);
-      const matchingSegmentsIds = checkResults.map((result) => result.segmentId);
+      const matchingSegmentsIds = checkResults.map(
+        (result) => result.segmentId
+      );
       const body = { segmentsPictures, matchingSegmentsIds };
       const headers: HeadersInit = new Headers();
       headers.set('Content-Type', 'application/json');
@@ -137,7 +146,10 @@ const Home = () => {
         <div className={'mb-5'}>
           {!!(accessToken && activities.length) && (
             <>
-              <Activities activities={activities} checkForSegments={checkForSegments} />
+              <Activities
+                activities={activities}
+                checkForSegments={checkForSegments}
+              />
               <MatchingSegmentsModal
                 checkResults={checkResults}
                 displayModal={showModal}

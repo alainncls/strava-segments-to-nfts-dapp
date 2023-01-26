@@ -12,7 +12,14 @@ const Header = (props: IProps) => {
 
   return (
     <header>
-      <Navbar collapseOnSelect fixed={'top'} expand={'lg'} bg={'light'} variant={'light'} role="navigation">
+      <Navbar
+        collapseOnSelect
+        fixed={'top'}
+        expand={'lg'}
+        bg={'light'}
+        variant={'light'}
+        role="navigation"
+      >
         <Container>
           <Navbar.Toggle aria-controls={'responsive-navbar-nav'} />
           <Navbar.Collapse aria-controls={'responsive-navbar-nav'}>
@@ -33,7 +40,9 @@ const Header = (props: IProps) => {
 
       <div className="p-5 mt-5 mb-3 text-center bg-light">
         <h1 className="mb-3">Strava Segments to NFTs</h1>
-        <h4 className="mb-3">Mint NFTs for the Strava segments you've gone through</h4>
+        <h4 className="mb-3">
+          Mint NFTs for the Strava segments you've gone through
+        </h4>
         <a
           className="btn btn-outline-secondary m-1"
           href="https://github.com/alainncls/strava-segments-to-nfts-webapp"

@@ -40,7 +40,7 @@ beforeEach(() => {
   global.fetch = jest.fn(() =>
     Promise.resolve({
       json: () => Promise.resolve(activities),
-    }),
+    })
   ) as jest.Mock;
 });
 
@@ -48,7 +48,7 @@ test('renders home component with login button if no token', () => {
   render(
     <MemoryRouter initialEntries={[{ pathname: '/' }]}>
       <Home />
-    </MemoryRouter>,
+    </MemoryRouter>
   );
   const headerElement = screen.getByRole('navigation');
   expect(headerElement).toBeInTheDocument();
@@ -68,7 +68,7 @@ test('renders home component with activities if the access token is found', asyn
   render(
     <MemoryRouter initialEntries={[{ pathname: '/' }]}>
       <Home />
-    </MemoryRouter>,
+    </MemoryRouter>
   );
   const headerElement = screen.getByRole('navigation');
   expect(headerElement).toBeInTheDocument();
@@ -89,24 +89,35 @@ test('renders home component with activities if the access token is found', asyn
 test('renders home component with token refreshing feature', async () => {
   window.sessionStorage.setItem('accessToken', 'accessToken');
   window.sessionStorage.setItem('refreshToken', 'refreshToken');
-  window.sessionStorage.setItem('tokenCreationDate', new Date('Wed Jun 07 2022 22:42:25').toString());
+  window.sessionStorage.setItem(
+    'tokenCreationDate',
+    new Date('Wed Jun 07 2022 22:42:25').toString()
+  );
 
   global.fetch = jest.fn(() =>
     Promise.resolve({
-      json: () => Promise.resolve({ refresh_token: 'newRefreshToken', access_token: 'newAccessToken' }),
-    }),
+      json: () =>
+        Promise.resolve({
+          refresh_token: 'newRefreshToken',
+          access_token: 'newAccessToken',
+        }),
+    })
   ) as jest.Mock;
 
   render(
     <MemoryRouter initialEntries={[{ pathname: '/' }]}>
       <Home />
-    </MemoryRouter>,
+    </MemoryRouter>
   );
 
   await new Promise(process.nextTick);
 
-  expect(window.sessionStorage.getItem('accessToken')).toEqual('newAccessToken');
-  expect(window.sessionStorage.getItem('refreshToken')).toEqual('newRefreshToken');
+  expect(window.sessionStorage.getItem('accessToken')).toEqual(
+    'newAccessToken'
+  );
+  expect(window.sessionStorage.getItem('refreshToken')).toEqual(
+    'newRefreshToken'
+  );
 });
 
 test('renders home component able to find matching segments', async () => {
@@ -117,13 +128,19 @@ test('renders home component able to find matching segments', async () => {
   render(
     <MemoryRouter initialEntries={[{ pathname: '/' }]}>
       <Home />
-    </MemoryRouter>,
+    </MemoryRouter>
   );
 
   global.fetch = jest.fn(() =>
     Promise.resolve({
-      json: () => Promise.resolve({ activity: { matchingSegmentsIds: ['12345'], segmentsPictures: ['ipfs://cid'] } }),
-    }),
+      json: () =>
+        Promise.resolve({
+          activity: {
+            matchingSegmentsIds: ['12345'],
+            segmentsPictures: ['ipfs://cid'],
+          },
+        }),
+    })
   ) as jest.Mock;
 
   const modalElement = screen.queryByText('Eligible segments');
@@ -140,7 +157,7 @@ test('renders home component able to find matching segments', async () => {
     new MouseEvent('click', {
       bubbles: true,
       cancelable: true,
-    }),
+    })
   );
 
   const visbleModalElement = await screen.findByText('Eligible segments');
@@ -154,7 +171,7 @@ test('renders home component able to find matching segments', async () => {
     new MouseEvent('click', {
       bubbles: true,
       cancelable: true,
-    }),
+    })
   );
 
   await waitFor(() => {

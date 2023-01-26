@@ -33,7 +33,9 @@ beforeEach(() => {
 });
 
 test('renders activities', () => {
-  render(<Activities activities={activities} checkForSegments={checkForSegments} />);
+  render(
+    <Activities activities={activities} checkForSegments={checkForSegments} />
+  );
   const activity1Element = screen.getByText(activities[0].name);
   expect(activity1Element).toBeInTheDocument();
   const activity2Element = screen.getByText(activities[1].name);
@@ -41,7 +43,9 @@ test('renders activities', () => {
 });
 
 test('renders activities with ability to check segments', () => {
-  render(<Activities activities={activities} checkForSegments={checkForSegments} />);
+  render(
+    <Activities activities={activities} checkForSegments={checkForSegments} />
+  );
   const buttonElements = screen.getAllByText('Check for eligible segments');
   expect(buttonElements).toHaveLength(2);
 
@@ -50,7 +54,7 @@ test('renders activities with ability to check segments', () => {
     new MouseEvent('click', {
       bubbles: true,
       cancelable: true,
-    }),
+    })
   );
   expect(checkForSegments).toHaveBeenCalledWith(activities[0].id);
 
@@ -59,7 +63,7 @@ test('renders activities with ability to check segments', () => {
     new MouseEvent('click', {
       bubbles: true,
       cancelable: true,
-    }),
+    })
   );
   expect(checkForSegments).toHaveBeenCalledWith(activities[1].id);
 });

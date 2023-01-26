@@ -22,7 +22,7 @@ test('renders visible modal', () => {
       checkResults={checkResults}
       handleMintNfts={handleMintNfts}
       onHide={onHide}
-    />,
+    />
   );
   const buttonElement = screen.getByText('Eligible segments');
   expect(buttonElement).toBeInTheDocument();
@@ -37,7 +37,7 @@ test('renders invisible modal', () => {
       checkResults={checkResults}
       handleMintNfts={handleMintNfts}
       onHide={onHide}
-    />,
+    />
   );
   const modalElement = screen.queryByText('Eligible segments');
   expect(modalElement).not.toBeInTheDocument();
@@ -50,7 +50,7 @@ test('renders closable modal', () => {
       checkResults={checkResults}
       handleMintNfts={handleMintNfts}
       onHide={onHide}
-    />,
+    />
   );
   const closeButtonElement = screen.getByText('Close');
   expect(closeButtonElement).toBeInTheDocument();
@@ -59,7 +59,7 @@ test('renders closable modal', () => {
     new MouseEvent('click', {
       bubbles: true,
       cancelable: true,
-    }),
+    })
   );
   expect(onHide).toHaveBeenCalled();
 });
@@ -71,7 +71,7 @@ test('renders modal with mint action', () => {
       checkResults={checkResults}
       handleMintNfts={handleMintNfts}
       onHide={onHide}
-    />,
+    />
   );
   const mintButtonElement = screen.getByText('Mint NFTs');
   expect(mintButtonElement).toBeInTheDocument();
@@ -80,7 +80,7 @@ test('renders modal with mint action', () => {
     new MouseEvent('click', {
       bubbles: true,
       cancelable: true,
-    }),
+    })
   );
   expect(handleMintNfts).toHaveBeenCalled();
 });
@@ -96,7 +96,7 @@ test('renders modal with segments displayed', () => {
       checkResults={checkResults}
       handleMintNfts={handleMintNfts}
       onHide={onHide}
-    />,
+    />
   );
   const segment1IdElement = screen.getByText(/1234/i);
   expect(segment1IdElement).toBeInTheDocument();
