@@ -1,8 +1,8 @@
 {
-  "name": "strava-segments-to-nfts-webapp",
+  "name": "strava-segments-to-nfts-dapp",
   "version": "0.0.1",
-  "description": "Web application for a project aiming to generate an NFT for each new unique and eligible segment a Strava user runs through.",
-  "repository": "git@github.com:alainncls/strava-segments-to-nfts-webapp.git",
+  "description": "Decentralized application aiming to generate an NFT for each new unique and eligible segment a Strava user runs\nthrough. ",
+  "repository": "git@github.com:alainncls/strava-segments-to-nfts-dapp.git",
   "license": "ISC",
   "author": "Alain Nicolas",
   "scripts": {
@@ -30,6 +30,14 @@
       "react-app/jest"
     ]
   },
+  "jest": {
+    "transform": {
+      "^.+\\.[t|j]sx?$": "babel-jest"
+    },
+    "transformIgnorePatterns": [
+      "node_modules/(?!connectkit)/"
+    ]
+  },
   "dependencies": {
     "bootstrap": "^5.2.3",
     "bootstrap-icons": "^1.10.3",
@@ -49,15 +57,7 @@
     "@types/jest": "^28.0.0",
     "@types/react": "^18.0.27",
     "prettier": "^2.8.3",
-    "react-scripts": "5.0.1",
+    "react-scripts": "^5.0.1",
     "typescript": "^4.9.4"
-  },
-  "jest": {
-    "transform": {
-      "^.+\\.[t|j]sx?$": "babel-jest"
-    },
-    "transformIgnorePatterns": [
-      "node_modules/(?!connectkit)/"
-    ]
   }
 }
