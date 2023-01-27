@@ -7,6 +7,7 @@ import { Activity } from '../../types/activity';
 
 jest.mock('connectkit', () => ({
   ConnectKitButton: () => {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
     const React = require('react');
     return React.createElement('MockButton');
   },

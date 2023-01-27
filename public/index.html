@@ -1,37 +1,37 @@
 <!DOCTYPE html>
-<html lang='en'>
+<html lang="en">
 <head>
-  <meta charset='utf-8' />
-  <link href='%PUBLIC_URL%/favicon-light.png' rel='icon' />
-  <meta content='width=device-width, initial-scale=1' name='viewport' />
-  <meta content='#000000' name='theme-color' />
-  <meta content='Mint NFTs for the eligible Strava segments you have gone through' name='description' />
+  <meta charset="utf-8" />
+  <link href="%PUBLIC_URL%/favicon-light.png" rel="icon" />
+  <meta content="width=device-width, initial-scale=1" name="viewport" />
+  <meta content="#000000" name="theme-color" />
+  <meta content="Mint NFTs for the eligible Strava segments you have gone through" name="description" />
   <title>Strava to NFTs</title>
 </head>
 <body>
 <noscript>You need to enable JavaScript to run this app.</noscript>
 <script>
-  const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+  const darkModeMediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
   handleDarkMode(darkModeMediaQuery);
 
   function handleDarkMode(e) {
     const darkModeOn = e.matches; // true if dark mode is enabled
-    const favicon = document.querySelector('link[rel="icon"]'); // get favicon element
+    const favicon = document.querySelector("link[rel=\"icon\"]"); // get favicon element
     if (!favicon) {
       return; // where is the favicon
     }
     // replace icons with dark/light themes as appropriate
     if (darkModeOn) {
-      favicon.href = '%PUBLIC_URL%/favicon-dark.png';
+      favicon.href = "%PUBLIC_URL%/favicon-dark.png";
     } else {
-      favicon.href = '%PUBLIC_URL%/favicon-light.png';
+      favicon.href = "%PUBLIC_URL%/favicon-light.png";
     }
   }
 
-  darkModeMediaQuery.addEventListener('change', (e) => {
+  darkModeMediaQuery.addEventListener("change", (e) => {
     this.handleDarkMode(e);
   });
 </script>
-<div id='app'></div>
+<div id="root"></div>
 </body>
 </html>
