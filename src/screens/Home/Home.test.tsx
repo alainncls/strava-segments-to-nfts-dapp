@@ -144,7 +144,7 @@ test('renders home component able to find matching segments', async () => {
     })
   ) as jest.Mock;
 
-  const modalElement = screen.queryByText('Eligible segments');
+  const modalElement = screen.queryByText('Segments in');
   expect(modalElement).not.toBeInTheDocument();
 
   const activity1Element = await screen.findByText(activity1.name);
@@ -161,8 +161,8 @@ test('renders home component able to find matching segments', async () => {
     })
   );
 
-  const visbleModalElement = await screen.findByText('Eligible segments');
-  expect(visbleModalElement).toBeInTheDocument();
+  const visibleModalElement = await screen.findByText('Segments in');
+  expect(visibleModalElement).toBeInTheDocument();
 
   const buttonElement = await screen.findByText('Mint NFTs');
   expect(buttonElement).toBeInTheDocument();

@@ -18,12 +18,9 @@ const MatchingSegmentsModal = (props: IProps) => {
 
   useEffect(() => {
     if (activity?.segments) {
-      console.log('useEffect');
       setCurrentSegments(activity.segments);
     }
   }, [activity]);
-
-  console.log('activity', activity);
 
   const generatePicture = async (segment: Segment) => {
     if (currentSegments) {
