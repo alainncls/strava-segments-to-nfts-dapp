@@ -5,10 +5,11 @@ import { Activity } from '../../types/activity';
 interface IProps {
   activities: Activity[];
   checkForSegments: (activityId: string) => void;
+  displaySegments: (activityId: string) => void;
 }
 
 const Activities = (props: IProps) => {
-  const { activities, checkForSegments } = props;
+  const { activities, checkForSegments, displaySegments } = props;
   return (
     <div className="row">
       {activities?.map((activity) => (
@@ -31,7 +32,14 @@ const Activities = (props: IProps) => {
                   Check for eligible segments
                 </Button>
               )}
-              {activity.segments && <>{activity.segments.length} segments</>}
+              {activity.segments && (
+                <Button
+                  className="btn btn-primary btn-sm"
+                  onClick={() => displaySegments(activity.id)}
+                >
+                  {`${activity.segments.length} segments`}
+                </Button>
+              )}
             </Card.Footer>
           </Card>
         </div>

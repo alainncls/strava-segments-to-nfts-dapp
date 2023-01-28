@@ -41,9 +41,11 @@
   "dependencies": {
     "bootstrap": "^5.2.3",
     "bootstrap-icons": "^1.10.3",
+    "canvas": "^2.11.0",
     "connectkit": "^1.1.2",
     "ethers": "^5.7.2",
     "jazzicon-ts": "^2.0.0",
+    "polyline-encoded": "^0.0.9",
     "react": "^18.2.0",
     "react-bootstrap": "^2.7.0",
     "react-router-dom": "^6.7.0",

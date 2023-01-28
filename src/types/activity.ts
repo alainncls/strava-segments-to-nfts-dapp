@@ -1,3 +1,5 @@
+import { Segment } from './segment';
+
 export interface Activity {
   id: string;
   stravaId: number;
@@ -8,8 +10,4 @@ export interface Activity {
   transactionsHashes: string[];
   start_date: string;
   segments?: Segment[];
-}
-
-export interface Segment {
-  id: number;
 }

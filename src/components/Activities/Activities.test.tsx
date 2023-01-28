@@ -6,6 +6,7 @@ import { Activity } from '../../types/activity';
 
 let activities: Activity[];
 let checkForSegments: (activityId: string) => void;
+let displaySegments: (activityId: string) => void;
 
 beforeEach(() => {
   activities = [
@@ -35,7 +36,11 @@ beforeEach(() => {
 
 test('renders activities', () => {
   render(
-    <Activities activities={activities} checkForSegments={checkForSegments} />
+    <Activities
+      activities={activities}
+      checkForSegments={checkForSegments}
+      displaySegments={displaySegments}
+    />
   );
   const activity1Element = screen.getByText(activities[0].name);
   expect(activity1Element).toBeInTheDocument();
@@ -45,7 +50,11 @@ test('renders activities', () => {
 
 test('renders activities with ability to check segments', () => {
   render(
-    <Activities activities={activities} checkForSegments={checkForSegments} />
+    <Activities
+      activities={activities}
+      checkForSegments={checkForSegments}
+      displaySegments={displaySegments}
+    />
   );
   const buttonElements = screen.getAllByText('Check for eligible segments');
   expect(buttonElements).toHaveLength(2);

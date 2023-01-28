@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Container } from 'react-bootstrap';
 import { Activity } from '../../types/activity';
-import { ISegment } from '../../types/segment';
 import Loader from '../../components/Loader/Loader';
 import Header from '../../components/Header/Header';
 import Activities from '../../components/Activities/Activities';
 import MatchingSegmentsModal from '../../components/MatchingSegmentsModal/MatchingSegmentsModal';
 import Footer from '../../components/Footer/Footer';
+import { computeDistance, isKnownType } from '../../utils/segmentUtils';
+import { SegmentEffort } from '../../types/segment';
 
 const Home = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -14,7 +15,7 @@ const Home = () => {
   const [refreshToken, setRefreshToken] = useState<string>();
   const [accessToken, setAccessToken] = useState<string>();
   const [tokenCreationDate, setTokenCreationDate] = useState<Date>();
-  const [checkResults, setCheckResults] = useState<ISegment[]>([]);
+  const [currentActivity, setCurrentActivity] = useState<Activity>();
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
@@ -91,51 +92,48 @@ const Home = () => {
         `https://www.strava.com/api/v3/activities/${activityId}?access_token=${accessToken}`
       )
         .then((res) => res.json())
-        .then((data) => {
-          setActivities(
-            activities.map((activity) => {
-              if (activity.id === activityId) {
-                activity.segments = data.segment_efforts;
-              }
-              return activity;
-            })
-          );
+        .then(async (data) => {
+          const segmentEfforts = data.segment_efforts;
+          if (segmentEfforts?.length) {
+            const segments = await Promise.all(
+              segmentEfforts.map(async (segmentEffort: SegmentEffort) => {
+                //const rawSegment = await getSegment(segmentEffort.segment.id);
+                return {
+                  id: segmentEffort.segment.id,
+                  title: segmentEffort.segment.name,
+                  distance: computeDistance(segmentEffort.segment.distance),
+                  type: isKnownType(segmentEffort.segment.activity_type)
+                    ? segmentEffort.segment.activity_type
+                    : 'default',
+                  //polyline: PolylineUtil.decode(rawSegment.map.polyline),
+                };
+              })
+            );
+            setActivities(
+              activities.map((activity) => {
+                if (activity.id === activityId) {
+                  activity.segments = segments;
+                }
+                return activity;
+              })
+            );
+          }
         })
         .catch((e) => console.error(e))
         .finally(() => setIsLoading(false));
     }
   };
 
-  const handleMintNfts = () => {
-    if (accessToken && checkResults.length) {
-      setIsLoading(true);
-      const segmentsPictures = checkResults.map((result) => result.picture);
-      const matchingSegmentsIds = checkResults.map(
-        (result) => result.segmentId
-      );
-      const body = { segmentsPictures, matchingSegmentsIds };
-      const headers: HeadersInit = new Headers();
-      headers.set('Content-Type', 'application/json');
-      headers.set('x-strava-token', accessToken);
-      fetch(`${process.env.REACT_APP_SERVER_URL}/nfts`, {
-        method: 'POST',
-        body: JSON.stringify(body),
-        headers,
-      })
-        .then((res) => res.json())
-        .catch((e) => console.error(e))
-        .finally(() => {
-          setShowModal(false);
-          setIsLoading(false);
-        });
-    } else {
-      alert('Something went wrong while trying to mint NFTs');
-    }
+  const displaySegments = (activityId: string) => {
+    setCurrentActivity(
+      activities.find((activity) => activity.id === activityId)
+    );
+    setShowModal(true);
   };
 
   const onModalHide = () => {
     setShowModal(false);
-    setCheckResults([]);
+    setCurrentActivity(undefined);
   };
 
   return (
@@ -149,12 +147,13 @@ const Home = () => {
               <Activities
                 activities={activities}
                 checkForSegments={checkForSegments}
+                displaySegments={displaySegments}
               />
               <MatchingSegmentsModal
-                checkResults={checkResults}
+                activity={currentActivity}
                 displayModal={showModal}
-                handleMintNfts={handleMintNfts}
                 onHide={onModalHide}
+                accessToken={accessToken}
               />
             </>
           )}
