@@ -3,8 +3,9 @@ export interface Segment {
   title: string;
   distance: number;
   type: string;
-  polyline: number[][];
-  picture: string;
+  polyline?: number[][];
+  picture?: string;
+  pictureLink?: string;
 }
 
 export interface RawSegment extends Segment {

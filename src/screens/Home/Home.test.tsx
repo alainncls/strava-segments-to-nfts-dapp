@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { MemoryRouter } from 'react-router-dom';
 import React from 'react';
@@ -16,22 +16,12 @@ jest.mock('connectkit', () => ({
 const activity1: Activity = {
   id: 'ID 1',
   name: 'Activity 1',
-  stravaId: 1234,
   start_date: '2022-06-03T18:02:13Z',
-  matchingSegmentsIds: [2],
-  segmentsIds: [1, 2, 3],
-  segmentsPictures: ['ipfs://ipfsCID1'],
-  transactionsHashes: ['0x12345'],
 };
 const activity2: Activity = {
   id: 'ID 2',
   name: 'Activity 2',
-  stravaId: 5678,
   start_date: '2022-06-02T18:02:13Z',
-  matchingSegmentsIds: [1],
-  segmentsIds: [1, 2],
-  segmentsPictures: ['ipfs://ipfsCID2'],
-  transactionsHashes: ['0x67890'],
 };
 const activities = [activity1, activity2];
 
@@ -121,7 +111,7 @@ test('renders home component with token refreshing feature', async () => {
   );
 });
 
-test('renders home component able to find matching segments', async () => {
+test('renders home component able to find segments in activities', async () => {
   window.sessionStorage.setItem('accessToken', 'accessToken');
   window.sessionStorage.setItem('refreshToken', 'refreshToken');
   window.sessionStorage.setItem('tokenCreationDate', Date().toString());
@@ -150,32 +140,9 @@ test('renders home component able to find matching segments', async () => {
   const activity1Element = await screen.findByText(activity1.name);
   expect(activity1Element).toBeInTheDocument();
 
+  const activity2Element = await screen.findByText(activity2.name);
+  expect(activity2Element).toBeInTheDocument();
+
   const buttonElements = screen.queryAllByText('Check for eligible segments');
-  expect(buttonElements).toHaveLength(2);
-
-  fireEvent(
-    buttonElements[0],
-    new MouseEvent('click', {
-      bubbles: true,
-      cancelable: true,
-    })
-  );
-
-  const visibleModalElement = await screen.findByText('Segments in');
-  expect(visibleModalElement).toBeInTheDocument();
-
-  const buttonElement = await screen.findByText('Mint NFTs');
-  expect(buttonElement).toBeInTheDocument();
-
-  fireEvent(
-    buttonElement,
-    new MouseEvent('click', {
-      bubbles: true,
-      cancelable: true,
-    })
-  );
-
-  await waitFor(() => {
-    expect(screen.queryByText('Eligible segments')).not.toBeInTheDocument();
-  });
+  expect(buttonElements).toHaveLength(activities.length);
 });

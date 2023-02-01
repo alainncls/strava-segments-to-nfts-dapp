@@ -13,22 +13,12 @@ beforeEach(() => {
     {
       id: 'ID 1',
       name: 'Activity 1',
-      stravaId: 1234,
       start_date: '2022-06-03T18:02:13Z',
-      matchingSegmentsIds: [2],
-      segmentsIds: [1, 2, 3],
-      segmentsPictures: ['ipfs://ipfsCID1'],
-      transactionsHashes: ['0x12345'],
     },
     {
       id: 'ID 2',
       name: 'Activity 2',
-      stravaId: 5678,
       start_date: '2022-06-02T18:02:13Z',
-      matchingSegmentsIds: [1],
-      segmentsIds: [1, 2],
-      segmentsPictures: ['ipfs://ipfsCID2'],
-      transactionsHashes: ['0x67890'],
     },
   ];
   checkForSegments = jest.fn();

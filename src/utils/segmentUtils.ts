@@ -52,33 +52,34 @@ export const generatePictureFromSegment = (segment: Segment): Promise<any> => {
 
   /* Start 'Draw segment shape' */
 
-  let minx: number, miny: number, maxx: number, maxy: number;
-  miny = minx = Infinity;
-  maxx = maxy = -Infinity;
-  segment.polyline.forEach((dat: number[]) => {
-    minx = Math.min(minx, dat[0]);
-    miny = Math.min(miny, dat[1]);
-    maxx = Math.max(maxx, dat[0]);
-    maxy = Math.max(maxy, dat[1]);
-  });
+  if (segment.polyline) {
+    let minx: number, miny: number, maxx: number, maxy: number;
+    miny = minx = Infinity;
+    maxx = maxy = -Infinity;
+    segment.polyline.forEach((dat: number[]) => {
+      minx = Math.min(minx, dat[0]);
+      miny = Math.min(miny, dat[1]);
+      maxx = Math.max(maxx, dat[0]);
+      maxy = Math.max(maxy, dat[1]);
+    });
 
-  const rangeX = maxx - minx;
-  const rangeY = maxy - miny;
-  const range = Math.max(rangeX, rangeY);
-  const scale = Math.min(width, height);
+    const rangeX = maxx - minx;
+    const rangeY = maxy - miny;
+    const range = Math.max(rangeX, rangeY);
+    const scale = Math.min(width, height);
 
-  context.beginPath();
-  segment.polyline.forEach((dat: number[]) => {
-    let x = dat[0];
-    let y = dat[1];
-    x = ((x - minx) / range) * scale;
-    y = ((y - miny) / range) * scale;
-    context.lineTo(x, y);
-  });
-  context.strokeStyle = '#ffffff';
-  context.lineWidth = 2;
-  context.stroke();
-
+    context.beginPath();
+    segment.polyline.forEach((dat: number[]) => {
+      let x = dat[0];
+      let y = dat[1];
+      x = ((x - minx) / range) * scale;
+      y = ((y - miny) / range) * scale;
+      context.lineTo(x, y);
+    });
+    context.strokeStyle = '#ffffff';
+    context.lineWidth = 2;
+    context.stroke();
+  }
   /* End 'Draw segment shape' */
 
   return loadImage(`/img/${segment.type}.png`).then((image) => {
