@@ -12,9 +12,12 @@ a [webapp](https://github.com/alainncls/strava-segments-to-nfts-webapp), now bot
 
 ## How to launch
 
-### 1. Add secret identifiers
+### 1. Add your secret identifiers
 
-Add a `.env.local` file following the `.env` template, and add your (secret) Strava identifiers + Infura project ID.
+1. Copy the `.env` file to a `.env.local` file
+2. Fill it with your Strava application identifiers
+3. Fill it with your Infura identifiers for chain access
+4. Fill it with your Infura identifiers for IPFS access
 
 ### 2. Install dependencies
 
