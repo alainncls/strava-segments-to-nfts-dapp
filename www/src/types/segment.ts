@@ -5,7 +5,7 @@ export interface Segment {
   type: string;
   polyline?: number[][];
   picture?: string;
-  pictureLink?: string;
+  metadata?: string;
 }
 
 export interface RawSegment extends Segment {
