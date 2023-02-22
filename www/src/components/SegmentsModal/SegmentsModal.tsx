@@ -4,6 +4,7 @@ import { Activity } from '../../types/activity';
 import { generatePictureFromSegment } from '../../utils/segmentUtils';
 import { RawSegment, Segment } from '../../types/segment';
 import * as PolylineUtil from 'polyline-encoded';
+import { uploadToIPFS } from '../../utils/ipfsUtils';
 
 interface IProps {
   displayModal: boolean;
@@ -12,7 +13,7 @@ interface IProps {
   accessToken?: string;
 }
 
-const MatchingSegmentsModal = (props: IProps) => {
+const SegmentsModal = (props: IProps) => {
   const { displayModal, activity, onHide, accessToken } = props;
   const [currentSegments, setCurrentSegments] = useState(activity?.segments);
 
@@ -46,41 +47,44 @@ const MatchingSegmentsModal = (props: IProps) => {
 
   const uploadToIpfs = async (segment: Segment) => {
     if (segment.picture) {
-      const form = new FormData();
-      form.append(
+      const pictureForm = new FormData();
+      pictureForm.append(
         'file',
         await convertToBlob(segment.picture),
-        `${segment.title}.png`
+        `strava-nfts.png`
       );
 
-      const result = await fetch(
-        `https://ipfs.infura.io:5001/api/v0/add?pin=false`,
-        {
-          method: 'POST',
-          headers: {
-            Authorization: `Basic ${Buffer.from(
-              process.env.REACT_APP_INFURA_IPFS_ID +
-                ':' +
-                process.env.REACT_APP_INFURA_IPFS_SECRET
-            ).toString('base64')}`,
-          },
-          body: form,
-        }
-      )
-        .then((res) => res.json())
-        .then((data) => {
-          return data;
-        })
-        .catch((e) => console.error(e));
-      if (currentSegments) {
-        setCurrentSegments(
-          currentSegments.map((seg) => {
-            if (seg.id === segment.id) {
-              seg.pictureLink = `https://ipfs.io/ipfs/${result.Hash}`;
-            }
-            return seg;
-          })
+      const pictureIpfs = await uploadToIPFS(
+        await convertToBlob(segment.picture)
+      );
+
+      if (pictureIpfs) {
+        const metadata = {
+          stravaId: segment.id,
+          name: segment.title,
+          distance: segment.distance,
+          picture: pictureIpfs,
+        };
+
+        const metadataForm = new FormData();
+        metadataForm.append(
+          'file',
+          await convertToBlob(JSON.stringify(metadata)),
+          `strava-nfts.json`
         );
+
+        const metadataIpfs = await uploadToIPFS(JSON.stringify(metadata));
+
+        if (metadataIpfs && currentSegments) {
+          setCurrentSegments(
+            currentSegments.map((seg) => {
+              if (seg.id === segment.id) {
+                seg.metadata = metadataIpfs;
+              }
+              return seg;
+            })
+          );
+        }
       }
     }
   };
@@ -122,14 +126,14 @@ const MatchingSegmentsModal = (props: IProps) => {
                 )}
                 {segment.picture && (
                   <Col>
-                    {!segment.pictureLink && (
+                    {!segment.metadata && (
                       <Button size={'sm'} onClick={() => uploadToIpfs(segment)}>
                         Upload to IPFS
                       </Button>
                     )}
-                    {segment.pictureLink && (
+                    {segment.metadata && (
                       <a
-                        href={segment.pictureLink}
+                        href={segment.metadata}
                         target={'_blank'}
                         rel="noreferrer"
                       >
@@ -158,4 +162,4 @@ const MatchingSegmentsModal = (props: IProps) => {
     </Modal>
   );
 };
-export default MatchingSegmentsModal;
+export default SegmentsModal;

@@ -1,7 +1,7 @@
 import React from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import MatchingSegmentsModal from './MatchingSegmentsModal';
+import SegmentsModal from './SegmentsModal';
 import { Activity } from '../../types/activity';
 
 let displayModal: boolean;
@@ -17,7 +17,7 @@ const activity: Activity = {
       title: 'Cool segment',
       distance: 123,
       polyline: [[1, 1]],
-      pictureLink: undefined,
+      metadata: undefined,
       picture: undefined,
     },
   ],
@@ -30,7 +30,7 @@ beforeEach(() => {
 
 test('renders visible modal', () => {
   render(
-    <MatchingSegmentsModal
+    <SegmentsModal
       displayModal={displayModal}
       onHide={onHide}
       activity={activity}
@@ -44,7 +44,7 @@ test('renders invisible modal', () => {
   displayModal = false;
 
   render(
-    <MatchingSegmentsModal
+    <SegmentsModal
       displayModal={displayModal}
       onHide={onHide}
       activity={activity}
@@ -56,7 +56,7 @@ test('renders invisible modal', () => {
 
 test('renders closable modal', () => {
   render(
-    <MatchingSegmentsModal
+    <SegmentsModal
       displayModal={displayModal}
       onHide={onHide}
       activity={activity}

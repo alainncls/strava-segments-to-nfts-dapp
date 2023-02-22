@@ -4,7 +4,7 @@ import { Activity } from '../../types/activity';
 import Loader from '../../components/Loader/Loader';
 import Header from '../../components/Header/Header';
 import Activities from '../../components/Activities/Activities';
-import MatchingSegmentsModal from '../../components/MatchingSegmentsModal/MatchingSegmentsModal';
+import SegmentsModal from '../../components/SegmentsModal/SegmentsModal';
 import Footer from '../../components/Footer/Footer';
 import { computeDistance, isKnownType } from '../../utils/segmentUtils';
 import { SegmentEffort } from '../../types/segment';
@@ -97,7 +97,6 @@ const Home = () => {
           if (segmentEfforts?.length) {
             const segments = await Promise.all(
               segmentEfforts.map(async (segmentEffort: SegmentEffort) => {
-                //const rawSegment = await getSegment(segmentEffort.segment.id);
                 return {
                   id: segmentEffort.segment.id,
                   title: segmentEffort.segment.name,
@@ -149,7 +148,7 @@ const Home = () => {
                 checkForSegments={checkForSegments}
                 displaySegments={displaySegments}
               />
-              <MatchingSegmentsModal
+              <SegmentsModal
                 activity={currentActivity}
                 displayModal={showModal}
                 onHide={onModalHide}
