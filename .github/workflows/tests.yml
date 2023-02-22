@@ -4,7 +4,10 @@ on:
   push:
 
 jobs:
-  test:
+  test-front:
+    defaults:
+      run:
+        working-directory: www
 
     name: Tests
     runs-on: ubuntu-latest
