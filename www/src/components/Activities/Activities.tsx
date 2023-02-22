@@ -17,29 +17,39 @@ const Activities = (props: IProps) => {
           <Card>
             <Card.Header>
               <Card.Title>{activity.name}</Card.Title>
+              <a
+                href={`https://www.strava.com/activities/${activity.id}`}
+                target="_blank"
+                rel="noreferrer"
+                className={'text-decoration-none'}
+              >
+                (View on Strava)
+              </a>
             </Card.Header>
             <Card.Body>
               <div>
                 {new Date(Date.parse(activity.start_date)).toLocaleDateString()}
               </div>
             </Card.Body>
-            <Card.Footer>
-              {!activity.segments && (
-                <Button
-                  className="btn btn-primary btn-sm"
-                  onClick={() => checkForSegments(activity.id)}
-                >
-                  Check for eligible segments
-                </Button>
-              )}
-              {activity.segments && (
-                <Button
-                  className="btn btn-primary btn-sm"
-                  onClick={() => displaySegments(activity.id)}
-                >
-                  {`${activity.segments.length} segments`}
-                </Button>
-              )}
+            <Card.Footer className={'d-flex'}>
+              <div>
+                {!activity.segments && (
+                  <Button
+                    className="btn btn-primary btn-sm"
+                    onClick={() => checkForSegments(activity.id)}
+                  >
+                    Check for eligible segments
+                  </Button>
+                )}
+                {activity.segments && (
+                  <Button
+                    className="btn btn-primary btn-sm"
+                    onClick={() => displaySegments(activity.id)}
+                  >
+                    {`${activity.segments.length} segments`}
+                  </Button>
+                )}
+              </div>
             </Card.Footer>
           </Card>
         </div>

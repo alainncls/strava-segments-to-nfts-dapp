@@ -112,6 +112,14 @@ const SegmentsModal = (props: IProps) => {
               <Row>
                 <Col>
                   <h5>{`${segment.title} - ${segment.distance}`}</h5>
+                  <a
+                    href={`https://www.strava.com/segments/${segment.id}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className={'text-decoration-none'}
+                  >
+                    (View on Strava)
+                  </a>
                 </Col>
 
                 {!segment.picture && (
