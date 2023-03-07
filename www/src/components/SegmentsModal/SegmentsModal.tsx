@@ -1,4 +1,4 @@
-import { Button, Col, Container, Modal, Row } from 'react-bootstrap';
+import { Button, Col, Container, Modal, Row, Spinner } from 'react-bootstrap';
 import React, { useEffect, useState } from 'react';
 import { Activity } from '../../types/activity';
 import { generatePictureFromSegment } from '../../utils/segmentUtils';
@@ -15,7 +15,9 @@ interface IProps {
 
 const SegmentsModal = (props: IProps) => {
   const { displayModal, activity, onHide, accessToken } = props;
+
   const [currentSegments, setCurrentSegments] = useState(activity?.segments);
+  const [isLoading, setIsLoading] = useState<Segment>();
 
   useEffect(() => {
     if (activity?.segments) {
@@ -25,6 +27,7 @@ const SegmentsModal = (props: IProps) => {
 
   const generatePicture = async (segment: Segment) => {
     if (currentSegments) {
+      setIsLoading(segment);
       const updatedSegments = await Promise.all(
         currentSegments.map(async (currentSegment) => {
           if (currentSegment.id === segment.id) {
@@ -39,6 +42,7 @@ const SegmentsModal = (props: IProps) => {
         })
       );
       setCurrentSegments(updatedSegments);
+      setIsLoading(undefined);
     }
   };
 
@@ -47,6 +51,7 @@ const SegmentsModal = (props: IProps) => {
 
   const uploadToIpfs = async (segment: Segment) => {
     if (segment.picture) {
+      setIsLoading(segment);
       const pictureForm = new FormData();
       pictureForm.append(
         'file',
@@ -86,6 +91,7 @@ const SegmentsModal = (props: IProps) => {
           );
         }
       }
+      setIsLoading(undefined);
     }
   };
 
@@ -128,6 +134,16 @@ const SegmentsModal = (props: IProps) => {
                       size={'sm'}
                       onClick={() => generatePicture(segment)}
                     >
+                      {isLoading === segment && (
+                        <>
+                          <Spinner
+                            as="span"
+                            size="sm"
+                            role="status"
+                            aria-hidden="true"
+                          />{' '}
+                        </>
+                      )}
                       Generate picture
                     </Button>
                   </Col>
@@ -136,6 +152,16 @@ const SegmentsModal = (props: IProps) => {
                   <Col>
                     {!segment.metadata && (
                       <Button size={'sm'} onClick={() => uploadToIpfs(segment)}>
+                        {isLoading === segment && (
+                          <>
+                            <Spinner
+                              as="span"
+                              size="sm"
+                              role="status"
+                              aria-hidden="true"
+                            />{' '}
+                          </>
+                        )}
                         Upload to IPFS
                       </Button>
                     )}
