@@ -104,7 +104,6 @@ const Home = () => {
                   type: isKnownType(segmentEffort.segment.activity_type)
                     ? segmentEffort.segment.activity_type
                     : 'default',
-                  //polyline: PolylineUtil.decode(rawSegment.map.polyline),
                 };
               })
             );
