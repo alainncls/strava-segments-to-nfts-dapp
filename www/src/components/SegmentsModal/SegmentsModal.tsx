@@ -95,6 +95,11 @@ const SegmentsModal = (props: IProps) => {
     }
   };
 
+  const mintNft = async (segment: Segment) => {
+    // TODO: launch NFT minting
+    alert('Not implemented');
+  };
+
   const getSegment = async (segmentId: number): Promise<RawSegment> => {
     return await fetch(
       `https://www.strava.com/api/v3/segments/${segmentId}?access_token=${accessToken}`
@@ -117,7 +122,9 @@ const SegmentsModal = (props: IProps) => {
             <Container key={`${segment.id + index}`}>
               <Row>
                 <Col>
-                  <h5>{`${segment.title} - ${segment.distance}`}</h5>
+                  <h5
+                    className={'mb-0'}
+                  >{`${segment.title} - ${segment.distance}`}</h5>
                   <a
                     href={`https://www.strava.com/segments/${segment.id}`}
                     target="_blank"
@@ -166,25 +173,42 @@ const SegmentsModal = (props: IProps) => {
                       </Button>
                     )}
                     {segment.metadata && (
-                      <a
-                        href={segment.metadata}
-                        target={'_blank'}
-                        rel="noreferrer"
-                      >
-                        Link to IPFS
-                      </a>
+                      <>
+                        <a
+                          href={segment.metadata}
+                          target={'_blank'}
+                          rel="noreferrer"
+                          className={'me-2'}
+                        >
+                          Metadata on IPFS
+                        </a>
+                        <Button size={'sm'} onClick={() => mintNft(segment)}>
+                          {isLoading === segment && (
+                            <>
+                              <Spinner
+                                as="span"
+                                size="sm"
+                                role="status"
+                                aria-hidden="true"
+                              />{' '}
+                            </>
+                          )}
+                          Mint as an NFT
+                        </Button>
+                      </>
                     )}
                   </Col>
                 )}
+                {segment.picture && (
+                  <img
+                    alt={`Segment ${segment.id}`}
+                    src={segment.picture}
+                    width={500}
+                    className={'my-2'}
+                  />
+                )}
               </Row>
             </Container>
-            {segment.picture && (
-              <img
-                alt={`Segment ${segment.id}`}
-                src={segment.picture}
-                width={500}
-              />
-            )}
           </>
         ))}
       </Modal.Body>
