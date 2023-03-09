@@ -97,7 +97,7 @@ const Home = () => {
         .then(async (data) => {
           const segmentEfforts = data.segment_efforts;
           if (segmentEfforts?.length) {
-            segments = await Promise.all(
+            const rawSegments = await Promise.all(
               segmentEfforts.map(async (segmentEffort: SegmentEffort) => {
                 return {
                   id: segmentEffort.segment.id,
@@ -109,6 +109,13 @@ const Home = () => {
                 };
               })
             );
+            segments = rawSegments.filter((currentSegment, index, self) => {
+              return (
+                self.findIndex(
+                  (segment) => segment.id === currentSegment.id
+                ) === index
+              );
+            });
           }
         })
         .catch((e) => console.error(e))
