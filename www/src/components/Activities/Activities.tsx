@@ -10,21 +10,24 @@ interface IProps {
 
 const Activities = (props: IProps) => {
   const { activities, checkForSegments, displaySegments } = props;
+
   return (
     <div className="row">
       {activities?.map((activity) => (
         <div className="col-sm-6 mb-3" key={activity.id}>
           <Card>
             <Card.Header>
-              <Card.Title>{activity.name}</Card.Title>
-              <a
-                href={`https://www.strava.com/activities/${activity.id}`}
-                target="_blank"
-                rel="noreferrer"
-                className={'text-decoration-none'}
-              >
-                (View on Strava)
-              </a>
+              <Card.Title className={'mb-0'}>
+                {activity.name}{' '}
+                <a
+                  href={`https://www.strava.com/activities/${activity.id}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className={'text-decoration-none fs-6'}
+                >
+                  (View on Strava)
+                </a>
+              </Card.Title>
             </Card.Header>
             <Card.Body>
               <div>
@@ -45,6 +48,7 @@ const Activities = (props: IProps) => {
                   <Button
                     className="btn btn-primary btn-sm"
                     onClick={() => displaySegments(activity.id)}
+                    disabled={!activity.segments?.length}
                   >
                     {`${activity.segments.length} segments`}
                   </Button>

@@ -7,7 +7,7 @@ import Activities from '../../components/Activities/Activities';
 import SegmentsModal from '../../components/SegmentsModal/SegmentsModal';
 import Footer from '../../components/Footer/Footer';
 import { computeDistance, isKnownType } from '../../utils/segmentUtils';
-import { SegmentEffort } from '../../types/segment';
+import { Segment, SegmentEffort } from '../../types/segment';
 
 const Home = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -88,6 +88,8 @@ const Home = () => {
     if (accessToken && isTokenValid()) {
       setIsLoading(true);
 
+      let segments: Segment[] = [];
+
       fetch(
         `https://www.strava.com/api/v3/activities/${activityId}?access_token=${accessToken}`
       )
@@ -95,7 +97,7 @@ const Home = () => {
         .then(async (data) => {
           const segmentEfforts = data.segment_efforts;
           if (segmentEfforts?.length) {
-            const segments = await Promise.all(
+            segments = await Promise.all(
               segmentEfforts.map(async (segmentEffort: SegmentEffort) => {
                 return {
                   id: segmentEffort.segment.id,
@@ -107,18 +109,20 @@ const Home = () => {
                 };
               })
             );
-            setActivities(
-              activities.map((activity) => {
-                if (activity.id === activityId) {
-                  activity.segments = segments;
-                }
-                return activity;
-              })
-            );
           }
         })
         .catch((e) => console.error(e))
-        .finally(() => setIsLoading(false));
+        .finally(() => {
+          setActivities(
+            activities.map((activity) => {
+              if (activity.id === activityId) {
+                activity.segments = segments;
+              }
+              return activity;
+            })
+          );
+          setIsLoading(false);
+        });
     }
   };
 
