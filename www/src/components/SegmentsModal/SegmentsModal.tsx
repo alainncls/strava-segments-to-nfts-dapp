@@ -5,6 +5,7 @@ import { generatePictureFromSegment } from '../../utils/segmentUtils';
 import { RawSegment, Segment } from '../../types/segment';
 import * as PolylineUtil from 'polyline-encoded';
 import { uploadToIPFS } from '../../utils/ipfsUtils';
+import { useAccount, useContractWrite, usePrepareContractWrite } from 'wagmi';
 
 interface IProps {
   displayModal: boolean;
@@ -16,8 +17,11 @@ interface IProps {
 const SegmentsModal = (props: IProps) => {
   const { displayModal, activity, onHide, accessToken } = props;
 
+  const { address, isConnected } = useAccount();
+
   const [currentSegments, setCurrentSegments] = useState(activity?.segments);
   const [isLoading, setIsLoading] = useState<Segment>();
+  const [segmentToMint, setSegmentToMint] = useState<Segment>();
 
   useEffect(() => {
     if (activity?.segments) {
@@ -65,10 +69,22 @@ const SegmentsModal = (props: IProps) => {
 
       if (pictureIpfs) {
         const metadata = {
-          stravaId: segment.id,
           name: segment.title,
-          distance: segment.distance,
-          picture: pictureIpfs,
+          image: pictureIpfs,
+          attributes: [
+            {
+              trait_type: 'Distance',
+              value: segment.distance,
+            },
+            {
+              trait_type: 'StravaI ID',
+              value: segment.id,
+            },
+            {
+              trait_type: 'Name',
+              value: segment.title,
+            },
+          ],
         };
 
         const metadataForm = new FormData();
@@ -96,9 +112,42 @@ const SegmentsModal = (props: IProps) => {
   };
 
   const mintNft = async (segment: Segment) => {
-    // TODO: launch NFT minting
-    alert('Not implemented');
+    setSegmentToMint(segment);
   };
+
+  const { config } = usePrepareContractWrite({
+    address: '0xe3D43b1fcb5a09c295ecFd69321eFbAbBFE091d0',
+    abi: [
+      {
+        inputs: [
+          {
+            internalType: 'address',
+            name: 'to',
+            type: 'address',
+          },
+          {
+            internalType: 'string',
+            name: 'uri',
+            type: 'string',
+          },
+        ],
+        name: 'safeMint',
+        outputs: [],
+        stateMutability: 'nonpayable',
+        type: 'function',
+      },
+    ],
+    functionName: 'safeMint',
+    args: [address || '0x1234', segmentToMint?.metadata || ''],
+    enabled: Boolean(segmentToMint?.metadata && isConnected),
+  });
+  const { write } = useContractWrite(config);
+
+  useEffect(() => {
+    if (segmentToMint && write) {
+      write();
+    }
+  }, [segmentToMint]);
 
   const getSegment = async (segmentId: number): Promise<RawSegment> => {
     return await fetch(
