@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Container } from 'react-bootstrap';
-import { Activity } from '../../types/activity';
 import Loader from '../../components/Loader/Loader';
 import Header from '../../components/Header/Header';
 import Activities from '../../components/Activities/Activities';
 import SegmentsModal from '../../components/SegmentsModal/SegmentsModal';
 import Footer from '../../components/Footer/Footer';
 import { computeDistance, isKnownType } from '../../utils/segmentUtils';
-import { Segment, SegmentEffort } from '../../types/segment';
+import { Activity, Segment, SegmentEffort } from '../../types';
 
 const Home = () => {
   const [isLoading, setIsLoading] = useState(true);

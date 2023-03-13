@@ -8,6 +8,13 @@ export interface Segment {
   metadata?: string;
 }
 
+export interface Activity {
+  id: string;
+  name: string;
+  start_date: string;
+  segments?: Segment[];
+}
+
 export interface RawSegment extends Segment {
   activity_type: string;
   name: string;
@@ -20,4 +27,15 @@ export interface SegmentMap {
 
 export interface SegmentEffort {
   segment: RawSegment;
+}
+
+export interface Attribute {
+  trait_type: string;
+  value: string | number;
+}
+
+export interface Metadata {
+  name: string;
+  image: string;
+  attributes: Attribute[];
 }

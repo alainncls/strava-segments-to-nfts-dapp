@@ -2,9 +2,9 @@ import React from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import SegmentsModal from './SegmentsModal';
-import { Activity } from '../../types/activity';
 import { setupClient } from '../../test';
 import { WagmiConfig } from 'wagmi';
+import { Activity } from '../../types';
 
 let displayModal: boolean;
 let onHide: () => void;

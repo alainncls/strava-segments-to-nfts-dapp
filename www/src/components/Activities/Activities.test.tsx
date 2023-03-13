@@ -2,7 +2,7 @@ import React from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import Activities from './Activities';
-import { Activity } from '../../types/activity';
+import { Activity } from '../../types';
 
 let activities: Activity[];
 let checkForSegments: (activityId: string) => void;

@@ -3,9 +3,9 @@ import '@testing-library/jest-dom';
 import { MemoryRouter } from 'react-router-dom';
 import React from 'react';
 import Home from './Home';
-import { Activity } from '../../types/activity';
 import { WagmiConfig } from 'wagmi';
 import { setupClient } from '../../test';
+import { Activity } from '../../types';
 
 jest.mock('connectkit', () => ({
   ConnectKitButton: () => {

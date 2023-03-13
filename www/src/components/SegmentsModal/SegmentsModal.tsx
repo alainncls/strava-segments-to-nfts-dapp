@@ -1,8 +1,7 @@
 import { Button, Col, Container, Modal, Row, Spinner } from 'react-bootstrap';
 import React, { useEffect, useState } from 'react';
-import { Activity } from '../../types/activity';
 import { generatePictureFromSegment } from '../../utils/segmentUtils';
-import { RawSegment, Segment } from '../../types/segment';
+import { Activity, Metadata, RawSegment, Segment } from '../../types';
 import * as PolylineUtil from 'polyline-encoded';
 import { uploadToIPFS } from '../../utils/ipfsUtils';
 import { useAccount, useContractWrite, usePrepareContractWrite } from 'wagmi';
@@ -20,7 +19,8 @@ const SegmentsModal = (props: IProps) => {
   const { address, isConnected } = useAccount();
 
   const [currentSegments, setCurrentSegments] = useState(activity?.segments);
-  const [isLoading, setIsLoading] = useState<Segment>();
+  const [loadingStep, setLoadingStep] = useState<string>();
+  const [error, setError] = useState<string>();
   const [segmentToMint, setSegmentToMint] = useState<Segment>();
 
   useEffect(() => {
@@ -31,7 +31,6 @@ const SegmentsModal = (props: IProps) => {
 
   const generatePicture = async (segment: Segment) => {
     if (currentSegments) {
-      setIsLoading(segment);
       const updatedSegments = await Promise.all(
         currentSegments.map(async (currentSegment) => {
           if (currentSegment.id === segment.id) {
@@ -46,16 +45,14 @@ const SegmentsModal = (props: IProps) => {
         })
       );
       setCurrentSegments(updatedSegments);
-      setIsLoading(undefined);
     }
   };
 
   const convertToBlob = async (content: string) =>
     fetch(content).then((res) => res.blob());
 
-  const uploadToIpfs = async (segment: Segment) => {
+  const uploadPictureToIpfs = async (segment: Segment) => {
     if (segment.picture) {
-      setIsLoading(segment);
       const pictureForm = new FormData();
       pictureForm.append(
         'file',
@@ -63,52 +60,57 @@ const SegmentsModal = (props: IProps) => {
         `strava-nfts.png`
       );
 
-      const pictureIpfs = await uploadToIPFS(
-        await convertToBlob(segment.picture)
+      return await uploadToIPFS(await convertToBlob(segment.picture));
+    }
+  };
+
+  const generateMetadata = (
+    segment: Segment,
+    pictureIpfs: string
+  ): Metadata => {
+    return {
+      name: segment.title,
+      image: pictureIpfs,
+      attributes: [
+        {
+          trait_type: 'Distance',
+          value: segment.distance,
+        },
+        {
+          trait_type: 'Strava ID',
+          value: segment.id,
+        },
+        {
+          trait_type: 'Name',
+          value: segment.title,
+        },
+      ],
+    };
+  };
+
+  const uploadMetadataToIpfs = async (
+    metadata: Metadata,
+    segmentId: number
+  ) => {
+    const metadataForm = new FormData();
+    metadataForm.append(
+      'file',
+      await convertToBlob(JSON.stringify(metadata)),
+      `strava-nfts.json`
+    );
+
+    const metadataIpfs = await uploadToIPFS(JSON.stringify(metadata));
+
+    if (metadataIpfs && currentSegments) {
+      setCurrentSegments(
+        currentSegments.map((seg) => {
+          if (seg.id === segmentId) {
+            seg.metadata = metadataIpfs;
+            setSegmentToMint(seg);
+          }
+          return seg;
+        })
       );
-
-      if (pictureIpfs) {
-        const metadata = {
-          name: segment.title,
-          image: pictureIpfs,
-          attributes: [
-            {
-              trait_type: 'Distance',
-              value: segment.distance,
-            },
-            {
-              trait_type: 'Strava ID',
-              value: segment.id,
-            },
-            {
-              trait_type: 'Name',
-              value: segment.title,
-            },
-          ],
-        };
-
-        const metadataForm = new FormData();
-        metadataForm.append(
-          'file',
-          await convertToBlob(JSON.stringify(metadata)),
-          `strava-nfts.json`
-        );
-
-        const metadataIpfs = await uploadToIPFS(JSON.stringify(metadata));
-
-        if (metadataIpfs && currentSegments) {
-          setCurrentSegments(
-            currentSegments.map((seg) => {
-              if (seg.id === segment.id) {
-                seg.metadata = metadataIpfs;
-                setSegmentToMint(seg);
-              }
-              return seg;
-            })
-          );
-        }
-      }
-      setIsLoading(undefined);
     }
   };
 
@@ -136,14 +138,41 @@ const SegmentsModal = (props: IProps) => {
     ],
     functionName: 'safeMint',
     args: [address || '0x1234', segmentToMint?.metadata || ''],
-    enabled: Boolean(segmentToMint?.metadata && isConnected),
+    enabled: Boolean(isConnected && segmentToMint?.metadata),
   });
   const { write } = useContractWrite(config);
 
-  const mintNft = async () => {
-    if (segmentToMint && write) {
-      write();
+  const mintNft = async (segment: Segment) => {
+    if (error) {
+      setError(undefined);
     }
+
+    setLoadingStep('Generate picture');
+    await generatePicture(segment);
+
+    setLoadingStep('Upload picture to IPFS');
+    const pictureIpfs = await uploadPictureToIpfs(segment);
+
+    if (pictureIpfs) {
+      setLoadingStep('Generate metadata');
+      const metadata = generateMetadata(segment, pictureIpfs);
+
+      setLoadingStep('Upload metadata to IPFS');
+      await uploadMetadataToIpfs(metadata, segment.id);
+
+      setLoadingStep('Minting NFT');
+      if (segmentToMint) {
+        if (write) {
+          write();
+          // TODO: wait for transaction?
+        }
+      } else {
+        setError('Error while uploading metadata to IPFS');
+      }
+    } else {
+      setError('Error while uploading picture to IPFS');
+    }
+    setLoadingStep(undefined);
   };
 
   const getSegment = async (segmentId: number): Promise<RawSegment> => {
@@ -181,13 +210,24 @@ const SegmentsModal = (props: IProps) => {
                   </a>
                 </Col>
 
-                {!segment.picture && (
-                  <Col>
+                <Col>
+                  <>
+                    {segment.metadata && (
+                      <a
+                        href={segment.metadata}
+                        target={'_blank'}
+                        rel="noreferrer"
+                        className={'me-2'}
+                      >
+                        Metadata on IPFS
+                      </a>
+                    )}
                     <Button
                       size={'sm'}
-                      onClick={() => generatePicture(segment)}
+                      onClick={() => mintNft(segment)}
+                      disabled={!isConnected || !!loadingStep}
                     >
-                      {isLoading === segment && (
+                      {loadingStep && (
                         <>
                           <Spinner
                             as="span"
@@ -197,58 +237,10 @@ const SegmentsModal = (props: IProps) => {
                           />{' '}
                         </>
                       )}
-                      Generate picture
+                      {isConnected ? 'Mint as an NFT' : 'Connect your wallet'}
                     </Button>
-                  </Col>
-                )}
-                {segment.picture && (
-                  <Col>
-                    {!segment.metadata && (
-                      <Button size={'sm'} onClick={() => uploadToIpfs(segment)}>
-                        {isLoading === segment && (
-                          <>
-                            <Spinner
-                              as="span"
-                              size="sm"
-                              role="status"
-                              aria-hidden="true"
-                            />{' '}
-                          </>
-                        )}
-                        Upload to IPFS
-                      </Button>
-                    )}
-                    {segment.metadata && (
-                      <>
-                        <a
-                          href={segment.metadata}
-                          target={'_blank'}
-                          rel="noreferrer"
-                          className={'me-2'}
-                        >
-                          Metadata on IPFS
-                        </a>
-                        <Button
-                          size={'sm'}
-                          onClick={() => mintNft()}
-                          disabled={!(segmentToMint || write)}
-                        >
-                          {isLoading === segment && (
-                            <>
-                              <Spinner
-                                as="span"
-                                size="sm"
-                                role="status"
-                                aria-hidden="true"
-                              />{' '}
-                            </>
-                          )}
-                          Mint as an NFT
-                        </Button>
-                      </>
-                    )}
-                  </Col>
-                )}
+                  </>
+                </Col>
                 {segment.picture && (
                   <img
                     alt={`Segment ${segment.id}`}
@@ -263,6 +255,13 @@ const SegmentsModal = (props: IProps) => {
         ))}
       </Modal.Body>
       <Modal.Footer>
+        {loadingStep && <p>{loadingStep}</p>}
+        {error && (
+          <>
+            <i className="bi bi-exclamation-circle text-danger"></i>
+            <p>{error}</p>
+          </>
+        )}
         <Button variant="secondary" onClick={onHide}>
           Close
         </Button>

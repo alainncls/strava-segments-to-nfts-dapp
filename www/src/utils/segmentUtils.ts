@@ -1,5 +1,5 @@
 import { createCanvas, loadImage } from 'canvas';
-import { Segment } from '../types/segment';
+import { Segment } from '../types';
 
 export const computeDistance = (distance: number) => {
   return Math.abs(distance) > 999
