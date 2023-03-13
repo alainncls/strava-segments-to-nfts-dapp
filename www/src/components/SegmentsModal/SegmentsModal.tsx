@@ -77,7 +77,7 @@ const SegmentsModal = (props: IProps) => {
               value: segment.distance,
             },
             {
-              trait_type: 'StravaI ID',
+              trait_type: 'Strava ID',
               value: segment.id,
             },
             {
@@ -101,6 +101,7 @@ const SegmentsModal = (props: IProps) => {
             currentSegments.map((seg) => {
               if (seg.id === segment.id) {
                 seg.metadata = metadataIpfs;
+                setSegmentToMint(seg);
               }
               return seg;
             })
@@ -109,10 +110,6 @@ const SegmentsModal = (props: IProps) => {
       }
       setIsLoading(undefined);
     }
-  };
-
-  const mintNft = async (segment: Segment) => {
-    setSegmentToMint(segment);
   };
 
   const { config } = usePrepareContractWrite({
@@ -143,11 +140,11 @@ const SegmentsModal = (props: IProps) => {
   });
   const { write } = useContractWrite(config);
 
-  useEffect(() => {
+  const mintNft = async () => {
     if (segmentToMint && write) {
       write();
     }
-  }, [segmentToMint]);
+  };
 
   const getSegment = async (segmentId: number): Promise<RawSegment> => {
     return await fetch(
@@ -231,7 +228,11 @@ const SegmentsModal = (props: IProps) => {
                         >
                           Metadata on IPFS
                         </a>
-                        <Button size={'sm'} onClick={() => mintNft(segment)}>
+                        <Button
+                          size={'sm'}
+                          onClick={() => mintNft()}
+                          disabled={!(segmentToMint || write)}
+                        >
                           {isLoading === segment && (
                             <>
                               <Spinner
