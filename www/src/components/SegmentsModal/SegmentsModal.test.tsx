@@ -3,6 +3,8 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import SegmentsModal from './SegmentsModal';
 import { Activity } from '../../types/activity';
+import { setupClient } from '../../test';
+import { WagmiConfig } from 'wagmi';
 
 let displayModal: boolean;
 let onHide: () => void;
@@ -30,11 +32,13 @@ beforeEach(() => {
 
 test('renders visible modal', () => {
   render(
-    <SegmentsModal
-      displayModal={displayModal}
-      onHide={onHide}
-      activity={activity}
-    />
+    <WagmiConfig client={setupClient()}>
+      <SegmentsModal
+        displayModal={displayModal}
+        onHide={onHide}
+        activity={activity}
+      />
+    </WagmiConfig>
   );
   const buttonElement = screen.getByText(`Segments in ${activity.name}`);
   expect(buttonElement).toBeInTheDocument();
@@ -44,11 +48,13 @@ test('renders invisible modal', () => {
   displayModal = false;
 
   render(
-    <SegmentsModal
-      displayModal={displayModal}
-      onHide={onHide}
-      activity={activity}
-    />
+    <WagmiConfig client={setupClient()}>
+      <SegmentsModal
+        displayModal={displayModal}
+        onHide={onHide}
+        activity={activity}
+      />
+    </WagmiConfig>
   );
   const modalElement = screen.queryByText(`Segments in ${activity.name}`);
   expect(modalElement).not.toBeInTheDocument();
@@ -56,11 +62,13 @@ test('renders invisible modal', () => {
 
 test('renders closable modal', () => {
   render(
-    <SegmentsModal
-      displayModal={displayModal}
-      onHide={onHide}
-      activity={activity}
-    />
+    <WagmiConfig client={setupClient()}>
+      <SegmentsModal
+        displayModal={displayModal}
+        onHide={onHide}
+        activity={activity}
+      />
+    </WagmiConfig>
   );
   const closeButtonElement = screen.getByText('Close');
   expect(closeButtonElement).toBeInTheDocument();

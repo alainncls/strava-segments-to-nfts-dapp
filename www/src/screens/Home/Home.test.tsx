@@ -4,6 +4,8 @@ import { MemoryRouter } from 'react-router-dom';
 import React from 'react';
 import Home from './Home';
 import { Activity } from '../../types/activity';
+import { WagmiConfig } from 'wagmi';
+import { setupClient } from '../../test';
 
 jest.mock('connectkit', () => ({
   ConnectKitButton: () => {
@@ -57,9 +59,11 @@ test('renders home component with activities if the access token is found', asyn
   window.sessionStorage.setItem('tokenCreationDate', Date().toString());
 
   render(
-    <MemoryRouter initialEntries={[{ pathname: '/' }]}>
-      <Home />
-    </MemoryRouter>
+    <WagmiConfig client={setupClient()}>
+      <MemoryRouter initialEntries={[{ pathname: '/' }]}>
+        <Home />
+      </MemoryRouter>
+    </WagmiConfig>
   );
   const headerElement = screen.getByRole('navigation');
   expect(headerElement).toBeInTheDocument();
@@ -117,9 +121,11 @@ test('renders home component able to find segments in activities', async () => {
   window.sessionStorage.setItem('tokenCreationDate', Date().toString());
 
   render(
-    <MemoryRouter initialEntries={[{ pathname: '/' }]}>
-      <Home />
-    </MemoryRouter>
+    <WagmiConfig client={setupClient()}>
+      <MemoryRouter initialEntries={[{ pathname: '/' }]}>
+        <Home />
+      </MemoryRouter>
+    </WagmiConfig>
   );
 
   global.fetch = jest.fn(() =>
