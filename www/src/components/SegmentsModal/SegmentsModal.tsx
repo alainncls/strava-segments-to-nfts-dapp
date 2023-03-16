@@ -1,10 +1,16 @@
-import { Button, Col, Container, Modal, Row, Spinner } from 'react-bootstrap';
+import { Button, Container, Modal } from 'react-bootstrap';
 import React, { useEffect, useState } from 'react';
 import { generatePictureFromSegment } from '../../utils/segmentUtils';
 import { Activity, Metadata, RawSegment, Segment } from '../../types';
 import * as PolylineUtil from 'polyline-encoded';
 import { uploadToIPFS } from '../../utils/ipfsUtils';
-import { useAccount, useContractWrite, usePrepareContractWrite } from 'wagmi';
+import {
+  useAccount,
+  useContractWrite,
+  usePrepareContractWrite,
+  useWaitForTransaction,
+} from 'wagmi';
+import SegmentItem from './SegmentItem';
 
 interface IProps {
   displayModal: boolean;
@@ -140,7 +146,7 @@ const SegmentsModal = (props: IProps) => {
     args: [address || '0x1234', segmentToMint?.metadata || ''],
     enabled: Boolean(isConnected && segmentToMint?.metadata),
   });
-  const { write } = useContractWrite(config);
+  const { data, write } = useContractWrite(config);
 
   const mintNft = async (segment: Segment) => {
     if (error) {
@@ -160,20 +166,25 @@ const SegmentsModal = (props: IProps) => {
       setLoadingStep('Upload metadata to IPFS');
       await uploadMetadataToIpfs(metadata, segment.id);
 
-      setLoadingStep('Minting NFT');
       if (segmentToMint) {
         if (write) {
           write();
-          // TODO: wait for transaction?
+          setLoadingStep(undefined);
         }
       } else {
+        setLoadingStep(undefined);
         setError('Error while uploading metadata to IPFS');
       }
     } else {
+      setLoadingStep(undefined);
       setError('Error while uploading picture to IPFS');
     }
-    setLoadingStep(undefined);
   };
+
+  const { isLoading: isTransactionLoading, isSuccess: isTransactionSuccess } =
+    useWaitForTransaction({
+      hash: data?.hash,
+    });
 
   const getSegment = async (segmentId: number): Promise<RawSegment> => {
     return await fetch(
@@ -195,70 +206,28 @@ const SegmentsModal = (props: IProps) => {
         {currentSegments?.map((segment, index) => (
           <>
             <Container key={`${segment.id + index}`}>
-              <Row>
-                <Col>
-                  <h5
-                    className={'mb-0'}
-                  >{`${segment.title} - ${segment.distance}`}</h5>
-                  <a
-                    href={`https://www.strava.com/segments/${segment.id}`}
-                    target="_blank"
-                    rel="noreferrer"
-                    className={'text-decoration-none'}
-                  >
-                    (View on Strava)
-                  </a>
-                </Col>
-
-                <Col>
-                  <>
-                    {segment.metadata && (
-                      <a
-                        href={segment.metadata}
-                        target={'_blank'}
-                        rel="noreferrer"
-                        className={'me-2'}
-                      >
-                        Metadata on IPFS
-                      </a>
-                    )}
-                    <Button
-                      size={'sm'}
-                      onClick={() => mintNft(segment)}
-                      disabled={!isConnected || !!loadingStep}
-                    >
-                      {loadingStep && (
-                        <>
-                          <Spinner
-                            as="span"
-                            size="sm"
-                            role="status"
-                            aria-hidden="true"
-                          />{' '}
-                        </>
-                      )}
-                      {isConnected ? 'Mint as an NFT' : 'Connect your wallet'}
-                    </Button>
-                  </>
-                </Col>
-                {segment.picture && (
-                  <img
-                    alt={`Segment ${segment.id}`}
-                    src={segment.picture}
-                    width={500}
-                    className={'my-2'}
-                  />
-                )}
-              </Row>
+              <SegmentItem segment={segment} mintNft={mintNft} />
             </Container>
           </>
         ))}
       </Modal.Body>
       <Modal.Footer>
         {loadingStep && <p>{loadingStep}</p>}
+        {isTransactionLoading && (
+          <>
+            <i className="bi bi-cloud-upload text-warning" />
+            <p>Transaction in progress...</p>
+          </>
+        )}
+        {isTransactionSuccess && (
+          <>
+            <i className="bi bi-check-circle text-success" />
+            <p>Transaction successful</p>
+          </>
+        )}
         {error && (
           <>
-            <i className="bi bi-exclamation-circle text-danger"></i>
+            <i className="bi bi-exclamation-circle text-danger" />
             <p>{error}</p>
           </>
         )}
