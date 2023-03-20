@@ -59,13 +59,6 @@ const SegmentsModal = (props: IProps) => {
 
   const uploadPictureToIpfs = async (segment: Segment) => {
     if (segment.picture) {
-      const pictureForm = new FormData();
-      pictureForm.append(
-        'file',
-        await convertToBlob(segment.picture),
-        `strava-nfts.png`
-      );
-
       return await uploadToIPFS(await convertToBlob(segment.picture));
     }
   };
@@ -90,6 +83,10 @@ const SegmentsModal = (props: IProps) => {
           trait_type: 'Name',
           value: segment.title,
         },
+        {
+          trait_type: 'Type',
+          value: segment.type,
+        },
       ],
     };
   };
@@ -98,13 +95,6 @@ const SegmentsModal = (props: IProps) => {
     metadata: Metadata,
     segmentId: number
   ) => {
-    const metadataForm = new FormData();
-    metadataForm.append(
-      'file',
-      await convertToBlob(JSON.stringify(metadata)),
-      `strava-nfts.json`
-    );
-
     const metadataIpfs = await uploadToIPFS(JSON.stringify(metadata));
 
     if (metadataIpfs && currentSegments) {
@@ -121,7 +111,7 @@ const SegmentsModal = (props: IProps) => {
   };
 
   const { config } = usePrepareContractWrite({
-    address: '0xe3D43b1fcb5a09c295ecFd69321eFbAbBFE091d0',
+    address: process.env.REACT_APP_CONTRACT_ADDRESS as `0x${string}`,
     abi: [
       {
         inputs: [
