@@ -1,17 +1,18 @@
 {
   "name": "strava-segments-to-nfts-dapp",
   "version": "0.0.1",
-  "description": "Decentralized application aiming to generate an NFT for each new unique and eligible segment a Strava user runs\nthrough. ",
+  "description": "Decentralized application aiming to generate an NFT for each new unique and eligible segment a Strava user runs through. ",
   "repository": "git@github.com:alainncls/strava-segments-to-nfts-dapp.git",
   "license": "ISC",
   "author": "Alain Nicolas",
   "main": "index.js",
   "scripts": {
-    "flatten": "truffle-flattener contracts/StravaSegmentNft.sol > StravaSegmentNft_flattened.sol",
-    "migrate": "truffle migrate",
-    "migrate:goerli": "npm run migrate --network goerli",
-    "migrate:local": "npm run migrate --network development",
-    "test": "truffle test"
+    "migrate:goerli": "truffle migrate --network goerli",
+    "migrate:local": "truffle migrate --network development",
+    "migrate:sepolia": "truffle migrate --network sepolia",
+    "test": "truffle test",
+    "verify:goerli": "truffle run verify StravaSegmentNft --network goerli",
+    "verify:sepolia": "truffle run verify StravaSegmentNft --network sepolia"
   },
   "devDependencies": {
     "@openzeppelin/contracts": "^4.8.1",
@@ -20,6 +21,6 @@
     "dotenv": "^16.0.3",
     "truffle": "^5.7.5",
     "truffle-assertions": "^0.9.2",
-    "truffle-flattener": "^1.6.0"
+    "truffle-plugin-verify": "^0.6.2"
   }
 }
