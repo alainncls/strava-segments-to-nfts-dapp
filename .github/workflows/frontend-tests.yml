@@ -1,10 +1,10 @@
-name: Tests
+name: Frontend Tests
 
 on:
   push:
 
 jobs:
-  test-front:
+  frontend-tests:
     defaults:
       run:
         working-directory: www
@@ -14,20 +14,20 @@ jobs:
 
     steps:
       - name: Checkout Source code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
-      - name: Setup NodeJS 16
-        uses: actions/setup-node@v2
+      - name: Setup NodeJS 18
+        uses: actions/setup-node@v3
         with:
-          node-version: '16'
+          node-version: '18'
 
       - name: Show NodeJS & NPM versions
         run: node --version && npm --version
 
       - name: Cache node_modules
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: '**/node_modules'
           key: ${{ runner.os }}-modules-${{ hashFiles('**/package-lock.json') }}

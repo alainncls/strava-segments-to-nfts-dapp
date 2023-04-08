@@ -1,4 +1,4 @@
-import { BigNumber, providers, Wallet } from 'ethers';
+import { providers, Wallet } from 'ethers';
 
 import { Chain } from 'wagmi';
 import { foundry, goerli, mainnet, optimism, polygon } from 'wagmi/dist/chains';
@@ -46,7 +46,7 @@ export function getWebSocketProvider({
   chainId,
 }: { chains?: Chain[]; chainId?: number } = {}) {
   const chain = testChains.find((x) => x.id === chainId) ?? foundryMainnet;
-  const url = foundryMainnet.rpcUrls.default.http[0]!.replace('http', 'ws');
+  const url = foundryMainnet.rpcUrls.default.http[0].replace('http', 'ws');
   const webSocketProvider = Object.assign(
     new EthersWebSocketProviderWrapper(url, getNetwork(chain)),
     { chains }
@@ -165,18 +165,13 @@ export const accounts = [
 
 export class WalletSigner extends Wallet {
   connectUnchecked(): providers.JsonRpcSigner {
-    const uncheckedSigner = (
-      this.provider as EthersProviderWrapper
-    ).getUncheckedSigner(this.address);
-    return uncheckedSigner;
+    return (this.provider as EthersProviderWrapper).getUncheckedSigner(
+      this.address
+    );
   }
 }
 
 export function getSigners() {
   const provider = getProvider();
   return accounts.map((x) => new WalletSigner(x.privateKey, provider));
-}
-
-export function getRandomTokenId() {
-  return BigNumber.from(Math.floor(Math.random() * 1000) + 69420);
 }
