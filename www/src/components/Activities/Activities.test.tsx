@@ -22,6 +22,7 @@ beforeEach(() => {
     },
   ];
   checkForSegments = jest.fn();
+  displaySegments = jest.fn();
 });
 
 test('renders activities', () => {
@@ -66,4 +67,28 @@ test('renders activities with ability to check segments', () => {
     })
   );
   expect(checkForSegments).toHaveBeenCalledWith(activities[1].id);
+});
+
+test('renders activities with ability to display segments', () => {
+  activities[0].segments = [
+    { id: 123, title: 'title', distance: 123, type: 'type' },
+  ];
+  render(
+    <Activities
+      activities={activities}
+      checkForSegments={checkForSegments}
+      displaySegments={displaySegments}
+    />
+  );
+  const buttonElements = screen.getAllByText('1 segments');
+  expect(buttonElements).toHaveLength(1);
+
+  fireEvent(
+    buttonElements[0],
+    new MouseEvent('click', {
+      bubbles: true,
+      cancelable: true,
+    })
+  );
+  expect(displaySegments).toHaveBeenCalledWith(activities[0].id);
 });

@@ -1,6 +1,6 @@
 # Strava Segments to NFTs
 
-[![Build](https://github.com/alainncls/strava-segments-to-nfts-dapp/actions/workflows/tests.yml/badge.svg)](https://github.com/alainncls/strava-segments-to-nfts-dapp/actions/workflows/tests.yml)
+[![Build](https://github.com/alainncls/strava-segments-to-nfts-dapp/actions/workflows/frontend-tests.yml/badge.svg)](https://github.com/alainncls/strava-segments-to-nfts-dapp/actions/workflows/tests.yml)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=alainncls_strava-segments-to-nfts-dapp&metric=coverage)](https://sonarcloud.io/summary/new_code?id=alainncls_strava-segments-to-nfts-dapp)
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=alainncls_strava-segments-to-nfts-dapp&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=alainncls_strava-segments-to-nfts-dapp)
 
