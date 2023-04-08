@@ -10,6 +10,34 @@ This project started as a centralized application, with
 a [backend](https://github.com/alainncls/strava-segments-to-nfts) and
 a [webapp](https://github.com/alainncls/strava-segments-to-nfts-webapp), now both deprecated.
 
+## How to use the NFT contract
+
+### 1. Go to `/blockchain`
+
+    cd blockchain
+
+### 2. Add your secret identifiers
+
+1. Copy the `.env.example` file to a `.env` file
+2. Fill it with your Infura identifiers for chain access
+3. If you want to use Truffle the old way, add you mnemonic
+4. If you want to verify your instance of the contract on Etherscan, add your Etherscan API key
+
+### 3. Compile the contract
+
+    npm run compile
+
+### 4. Deploy the contract
+
+#### Truffle legacy way
+
+    npm run migrate:sepolia
+
+#### With Truffle Dashboard
+
+    npm run dashboard
+    npm run migrate dashboard
+
 ## How to launch the web app
 
 ### 1. Go to `/www`
@@ -22,6 +50,7 @@ a [webapp](https://github.com/alainncls/strava-segments-to-nfts-webapp), now bot
 2. Fill it with your Strava application identifiers
 3. Fill it with your Infura identifiers for chain access
 4. Fill it with your Infura identifiers for IPFS access
+5. Fill it with the address of the contract you deployed previously
 
 ### 3. Install dependencies
 

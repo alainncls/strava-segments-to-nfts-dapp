@@ -1,5 +1,5 @@
-const StravaSegmentNft = artifacts.require("StravaSegmentNft");
+const StravaSegment = artifacts.require("StravaSegment");
 
 module.exports = async function (deployer) {
-  await deployer.deploy(StravaSegmentNft);
+  await deployer.deploy(StravaSegment);
 };

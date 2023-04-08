@@ -11,6 +11,7 @@ import {
   useWaitForTransaction,
 } from 'wagmi';
 import SegmentItem from './SegmentItem';
+import StravaSegment from '../../config/StravaSegment.json';
 
 interface IProps {
   displayModal: boolean;
@@ -112,29 +113,10 @@ const SegmentsModal = (props: IProps) => {
 
   const { config } = usePrepareContractWrite({
     address: process.env.REACT_APP_CONTRACT_ADDRESS as `0x${string}`,
-    abi: [
-      {
-        inputs: [
-          {
-            internalType: 'address',
-            name: 'to',
-            type: 'address',
-          },
-          {
-            internalType: 'string',
-            name: 'uri',
-            type: 'string',
-          },
-        ],
-        name: 'safeMint',
-        outputs: [],
-        stateMutability: 'nonpayable',
-        type: 'function',
-      },
-    ],
+    abi: StravaSegment.abi,
     functionName: 'safeMint',
-    args: [address || '0x1234', segmentToMint?.metadata || ''],
-    enabled: Boolean(isConnected && segmentToMint?.metadata),
+    args: [address, segmentToMint?.metadata],
+    enabled: Boolean(isConnected && address && segmentToMint?.metadata),
   });
   const { data, write } = useContractWrite(config);
 

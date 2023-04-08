@@ -6,7 +6,7 @@ import Home from './screens/Home/Home';
 import { ConnectKitProvider, getDefaultClient } from 'connectkit';
 import StravaLogin from './screens/StravaLogin/StravaLogin';
 
-const infuraId = process.env.REACT_APP_INFURA_ID;
+const infuraId = process.env.REACT_APP_INFURA_API_KEY;
 const chains = [goerli, sepolia];
 
 // Wagmi client

@@ -6,12 +6,12 @@ import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 
-contract StravaSegmentNft is ERC721, ERC721URIStorage, Ownable {
+contract StravaSegment is ERC721, ERC721URIStorage, Ownable {
     using Counters for Counters.Counter;
 
     Counters.Counter private _tokenIdCounter;
 
-    constructor() ERC721("StravaSegmentNft", "STRV") {}
+    constructor() ERC721("StravaSegment", "STRV") {}
 
     function _baseURI() internal pure override returns (string memory) {
         return "ipfs://";

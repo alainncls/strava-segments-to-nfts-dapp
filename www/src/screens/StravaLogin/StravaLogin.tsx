@@ -23,8 +23,8 @@ const StravaLogin = () => {
     const scope = query.get('scope');
 
     if (checkScope(scope) && code) {
-      const clientID = process.env.REACT_APP_CLIENT_ID;
-      const clientSecret = process.env.REACT_APP_CLIENT_SECRET;
+      const clientID = process.env.REACT_APP_STRAVA_CLIENT_ID;
+      const clientSecret = process.env.REACT_APP_STRAVA_CLIENT_SECRET;
 
       fetch(
         `https://www.strava.com/api/v3/oauth/token?client_id=${clientID}&client_secret=${clientSecret}&code=${code}&grant_type=authorization_code`,
