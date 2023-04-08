@@ -29,27 +29,6 @@ export function ReplacePublicGatewayWithYourGateway(jsonOrUrl: string): string {
   );
 }
 
-export async function downloadFromIPFS<T>(ipfsUri: string): Promise<T> {
-  ipfsUri = ReplacePublicGatewayWithYourGateway(ipfsUri);
-  const res = await fetch(ipfsUri);
-  let receivedObject: T;
-  let text;
-  try {
-    text = await res.text();
-    const textButWithYourGateway = ReplacePublicGatewayWithYourGateway(text);
-    receivedObject = JSON.parse(textButWithYourGateway) as T;
-  } catch (err) {
-    throw new Error(
-      'could not parse json, got text instead: ' +
-        JSON.stringify(err) +
-        ' parsed text:' +
-        text +
-        '  '
-    );
-  }
-  return receivedObject;
-}
-
 export async function uploadToIPFS(
   data: string | Blob | File
 ): Promise<string> {

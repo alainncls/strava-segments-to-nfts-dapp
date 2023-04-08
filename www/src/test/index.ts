@@ -4,15 +4,15 @@ import { MockConnector } from 'wagmi/connectors/mock';
 
 type Config = { chains?: Chain[] };
 
+export const connector = new MockConnector({
+  options: {
+    signer: getSigners()[0],
+  },
+});
+
 export function setupClient(config: Config = {}) {
   return createClient({
-    connectors: [
-      new MockConnector({
-        options: {
-          signer: getSigners()[0],
-        },
-      }),
-    ],
+    connectors: [connector],
     provider: ({ chainId }) => getProvider({ chainId, chains: config.chains }),
     ...config,
   });

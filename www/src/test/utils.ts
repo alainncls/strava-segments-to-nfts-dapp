@@ -175,3 +175,5 @@ export function getSigners() {
   const provider = getProvider();
   return accounts.map((x) => new WalletSigner(x.privateKey, provider));
 }
+
+export const addressRegex = /^0x[a-fA-F0-9]{40}/;
