@@ -22,13 +22,6 @@ export interface IpfsError {
 
 export type IpfsDataOrError = IpfsData | IpfsError;
 
-export function ReplacePublicGatewayWithYourGateway(jsonOrUrl: string): string {
-  return jsonOrUrl.replaceAll(
-    IPFSGateways.InfuraGateway,
-    IPFSGateways.YourDedicatedGateway
-  );
-}
-
 export async function uploadToIPFS(
   data: string | Blob | File
 ): Promise<string> {
