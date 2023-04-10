@@ -23,11 +23,15 @@ a [webapp](https://github.com/alainncls/strava-segments-to-nfts-webapp), now bot
 3. If you want to use Truffle the old way, add you mnemonic
 4. If you want to verify your instance of the contract on Etherscan, add your Etherscan API key
 
-### 3. Compile the contract
+### 3. Install dependencies
+
+    npm install
+
+### 4. Compile the contract
 
     npm run compile
 
-### 4. Deploy the contract
+### 5. Deploy the contract
 
 #### Truffle legacy way
 
