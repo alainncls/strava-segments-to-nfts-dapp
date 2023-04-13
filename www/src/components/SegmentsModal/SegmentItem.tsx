@@ -5,11 +5,12 @@ import { useAccount } from 'wagmi';
 
 interface IProps {
   segment: Segment;
-  mintNft: (segment: Segment) => Promise<void>;
+  prepareMinting: (segment: Segment) => Promise<void>;
+  mintNft: () => Promise<void>;
 }
 
 const SegmentItem = (props: IProps) => {
-  const { segment, mintNft } = props;
+  const { segment, prepareMinting, mintNft } = props;
 
   const { isConnected } = useAccount();
 
@@ -39,13 +40,19 @@ const SegmentItem = (props: IProps) => {
 
       <Col>
         <>
-          <Button
-            size={'sm'}
-            onClick={() => mintNft(segment)}
-            disabled={!isConnected}
-          >
-            {isConnected ? 'Mint as an NFT' : 'Connect your wallet'}
-          </Button>
+          {segment.metadata ? (
+            <Button
+              size={'sm'}
+              onClick={() => mintNft()}
+              disabled={!isConnected}
+            >
+              {isConnected ? 'Mint as an NFT' : 'Connect your wallet'}
+            </Button>
+          ) : (
+            <Button size={'sm'} onClick={() => prepareMinting(segment)}>
+              Prepare NFT for minting
+            </Button>
+          )}
         </>
       </Col>
       {segment.picture && (

@@ -8,7 +8,8 @@ import SegmentItem from './SegmentItem';
 import { Connect } from '../../test/Connect';
 import { addressRegex } from '../../test/utils';
 
-let mintNft: (segment: Segment) => Promise<void>;
+let prepareMinting: (segment: Segment) => Promise<void>;
+let mintNft: () => Promise<void>;
 const segment: Segment = {
   id: 123456,
   type: 'Ride',
@@ -20,13 +21,18 @@ const segment: Segment = {
 };
 
 beforeEach(() => {
+  prepareMinting = jest.fn();
   mintNft = jest.fn();
 });
 
 test('renders segment item without picture or metadata', () => {
   render(
     <WagmiConfig client={setupClient()}>
-      <SegmentItem segment={segment} mintNft={mintNft} />
+      <SegmentItem
+        segment={segment}
+        prepareMinting={prepareMinting}
+        mintNft={mintNft}
+      />
     </WagmiConfig>
   );
   const titleElement = screen.getByText(
@@ -37,11 +43,45 @@ test('renders segment item without picture or metadata', () => {
   const metadataElement = screen.queryByText('(View metadata on IPFS)');
   expect(metadataElement).not.toBeInTheDocument();
 
-  const mintButton = screen.queryByText('Connect your wallet');
-  expect(mintButton).toBeInTheDocument();
+  const prepareButton = screen.getByText('Prepare NFT for minting');
+  expect(prepareButton).toBeInTheDocument();
 
   const pictureElement = screen.queryByAltText(`Segment ${segment.id}`);
   expect(pictureElement).not.toBeInTheDocument();
+});
+
+test('renders segment item with ability to generate metadata', () => {
+  render(
+    <WagmiConfig client={setupClient()}>
+      <SegmentItem
+        segment={segment}
+        prepareMinting={prepareMinting}
+        mintNft={mintNft}
+      />
+    </WagmiConfig>
+  );
+  const titleElement = screen.getByText(
+    `${segment.title} - ${segment.distance}`
+  );
+  expect(titleElement).toBeInTheDocument();
+
+  const metadataElement = screen.queryByText('(View metadata on IPFS)');
+  expect(metadataElement).not.toBeInTheDocument();
+
+  const prepareButton = screen.getByText('Prepare NFT for minting');
+  expect(prepareButton).toBeInTheDocument();
+
+  const pictureElement = screen.queryByAltText(`Segment ${segment.id}`);
+  expect(pictureElement).not.toBeInTheDocument();
+
+  fireEvent(
+    prepareButton,
+    new MouseEvent('click', {
+      bubbles: true,
+      cancelable: true,
+    })
+  );
+  expect(prepareMinting).toHaveBeenCalledWith(segment);
 });
 
 test('renders segment item with picture but no metadata', () => {
@@ -49,7 +89,11 @@ test('renders segment item with picture but no metadata', () => {
 
   render(
     <WagmiConfig client={setupClient()}>
-      <SegmentItem segment={segment} mintNft={mintNft} />
+      <SegmentItem
+        segment={segment}
+        prepareMinting={prepareMinting}
+        mintNft={mintNft}
+      />
     </WagmiConfig>
   );
   const titleElement = screen.getByText(
@@ -60,8 +104,8 @@ test('renders segment item with picture but no metadata', () => {
   const metadataElement = screen.queryByText('(View metadata on IPFS)');
   expect(metadataElement).not.toBeInTheDocument();
 
-  const mintButton = screen.queryByText('Connect your wallet');
-  expect(mintButton).toBeInTheDocument();
+  const prepareButton = screen.getByText('Prepare NFT for minting');
+  expect(prepareButton).toBeInTheDocument();
 
   const pictureElement = screen.queryByAltText(`Segment ${segment.id}`);
   expect(pictureElement).toBeInTheDocument();
@@ -73,7 +117,11 @@ test('renders segment item with picture and metadata', () => {
 
   render(
     <WagmiConfig client={setupClient()}>
-      <SegmentItem segment={segment} mintNft={mintNft} />
+      <SegmentItem
+        segment={segment}
+        prepareMinting={prepareMinting}
+        mintNft={mintNft}
+      />
     </WagmiConfig>
   );
   const titleElement = screen.getByText(
@@ -86,6 +134,7 @@ test('renders segment item with picture and metadata', () => {
 
   const mintButton = screen.queryByText('Connect your wallet');
   expect(mintButton).toBeInTheDocument();
+  expect(mintButton).toBeDisabled();
 
   const pictureElement = screen.queryByAltText(`Segment ${segment.id}`);
   expect(pictureElement).toBeInTheDocument();
@@ -97,12 +146,17 @@ test('renders segment item without ability to mint it if not connected', () => {
 
   render(
     <WagmiConfig client={setupClient()}>
-      <SegmentItem segment={segment} mintNft={mintNft} />
+      <SegmentItem
+        segment={segment}
+        prepareMinting={prepareMinting}
+        mintNft={mintNft}
+      />
     </WagmiConfig>
   );
 
   const mintButton = screen.getByText('Connect your wallet');
   expect(mintButton).toBeInTheDocument();
+  expect(mintButton).toBeDisabled();
 
   fireEvent(
     mintButton,
@@ -121,7 +175,11 @@ test('renders segment item with ability to mint it if connected', async () => {
   render(
     <WagmiConfig client={setupClient()}>
       <Connect />
-      <SegmentItem segment={segment} mintNft={mintNft} />
+      <SegmentItem
+        segment={segment}
+        prepareMinting={prepareMinting}
+        mintNft={mintNft}
+      />
     </WagmiConfig>
   );
 
@@ -141,6 +199,7 @@ test('renders segment item with ability to mint it if connected', async () => {
 
   const mintButton = screen.getByText('Mint as an NFT');
   expect(mintButton).toBeInTheDocument();
+  expect(mintButton).not.toBeDisabled();
 
   fireEvent(
     mintButton,
@@ -149,5 +208,5 @@ test('renders segment item with ability to mint it if connected', async () => {
       cancelable: true,
     })
   );
-  expect(mintNft).toHaveBeenCalledWith(segment);
+  expect(mintNft).toHaveBeenCalled();
 });
