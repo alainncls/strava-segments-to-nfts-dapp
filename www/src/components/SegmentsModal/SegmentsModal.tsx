@@ -94,16 +94,22 @@ const SegmentsModal = (props: IProps) => {
 
   const uploadMetadataToIpfs = async (
     metadata: Metadata,
-    segmentId: number
-  ) => {
+    segment: Segment
+  ): Promise<void> => {
     const metadataIpfs = await uploadToIPFS(JSON.stringify(metadata));
 
-    if (metadataIpfs && currentSegments) {
+    const matchingSegment = currentSegments?.find(
+      (seg) => seg.id === segment.id
+    );
+
+    if (matchingSegment) {
+      matchingSegment.metadata = metadataIpfs;
+      setSegmentToMint(matchingSegment);
+
       setCurrentSegments(
-        currentSegments.map((seg) => {
-          if (seg.id === segmentId) {
-            seg.metadata = metadataIpfs;
-            setSegmentToMint(seg);
+        currentSegments?.map((seg) => {
+          if (seg.id === segment.id) {
+            seg = matchingSegment;
           }
           return seg;
         })
@@ -120,7 +126,7 @@ const SegmentsModal = (props: IProps) => {
   });
   const { data, write } = useContractWrite(config);
 
-  const mintNft = async (segment: Segment) => {
+  const prepareMinting = async (segment: Segment) => {
     if (error) {
       setError(undefined);
     }
@@ -136,20 +142,17 @@ const SegmentsModal = (props: IProps) => {
       const metadata = generateMetadata(segment, pictureIpfs);
 
       setLoadingStep('Upload metadata to IPFS');
-      await uploadMetadataToIpfs(metadata, segment.id);
-
-      if (segmentToMint) {
-        if (write) {
-          write();
-          setLoadingStep(undefined);
-        }
-      } else {
-        setLoadingStep(undefined);
-        setError('Error while uploading metadata to IPFS');
-      }
+      await uploadMetadataToIpfs(metadata, segment);
     } else {
       setLoadingStep(undefined);
       setError('Error while uploading picture to IPFS');
+    }
+  };
+
+  const mintNft = async () => {
+    if (write) {
+      write();
+      setLoadingStep(undefined);
     }
   };
 
@@ -178,7 +181,11 @@ const SegmentsModal = (props: IProps) => {
         {currentSegments?.map((segment, index) => (
           <>
             <Container key={`${segment.id + index}`}>
-              <SegmentItem segment={segment} mintNft={mintNft} />
+              <SegmentItem
+                segment={segment}
+                prepareMinting={prepareMinting}
+                mintNft={mintNft}
+              />
             </Container>
           </>
         ))}
