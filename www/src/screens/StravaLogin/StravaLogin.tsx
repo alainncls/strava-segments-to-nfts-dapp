@@ -63,6 +63,7 @@ const StravaLogin = () => {
         <Toast
           show={displayScopeError}
           onClick={() => setDisplayScopeError(false)}
+          data-testid={'toast-error'}
         >
           <Toast.Body>
             <p>

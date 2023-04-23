@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import StravaLogin from './StravaLogin';
 import { MemoryRouter } from 'react-router-dom';
@@ -37,7 +37,7 @@ test('renders component to intercept the oauth2 callback', () => {
   expect(footerElement).toBeInTheDocument();
 });
 
-test('renders an error if callback has incomplete scope', () => {
+test('renders a closable error toast if callback has incomplete scope', async () => {
   render(
     <MemoryRouter
       initialEntries={[
@@ -47,10 +47,22 @@ test('renders an error if callback has incomplete scope', () => {
       <StravaLogin />
     </MemoryRouter>
   );
-  const toastElement = screen.getByText(
-    'The scope you authorized is not sufficient for the app to work'
-  );
+
+  let toastElement = screen.getByTestId('toast-error');
   expect(toastElement).toBeInTheDocument();
+  expect(toastElement).toBeVisible();
+
+  fireEvent(
+    toastElement,
+    new MouseEvent('click', {
+      bubbles: true,
+      cancelable: true,
+    })
+  );
+
+  toastElement = screen.getByTestId('toast-error');
+  expect(toastElement).not.toBeInTheDocument();
+  expect(toastElement).not.toBeVisible();
 });
 
 test('renders no error if callback is complete', async () => {
@@ -70,10 +82,8 @@ test('renders no error if callback is complete', async () => {
 
   await new Promise(process.nextTick);
 
-  const toastElement = screen.queryAllByText(
-    'The scope you authorized is not sufficient for the app to work'
-  );
-  expect(toastElement).toHaveLength(0);
+  const toastElement = screen.queryByTestId('toast-error');
+  expect(toastElement).not.toBeInTheDocument();
 
   expect(window.sessionStorage.getItem('accessToken')).toEqual('accessToken');
   expect(window.sessionStorage.getItem('refreshToken')).toEqual('refreshToken');
