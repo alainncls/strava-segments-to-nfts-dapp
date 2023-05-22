@@ -26,7 +26,7 @@ export async function uploadToIPFS(
   data: string | Blob | File
 ): Promise<string> {
   const result = await callIpfsCommand('add', data);
-  return IPFSGateways.YourDedicatedGateway + result.Hash;
+  return 'ipfs://' + result.Hash;
 }
 
 function isIpfsData(
