@@ -7,14 +7,17 @@
   "author": "Alain Nicolas",
   "main": "index.js",
   "scripts": {
-    "compile": "truffle compile && cp build/contracts/StravaSegment.json ../www/src/config/",
+    "compile": "truffle compile && npm run update",
     "dashboard": "truffle dashboard",
-    "migrate:dashboard": "truffle migrate --network dashboard",
-    "migrate:goerli": "truffle migrate --network goerli",
-    "migrate:local": "truffle migrate --network development",
-    "migrate:sepolia": "truffle migrate --network sepolia",
+    "migrate:dashboard": "truffle migrate --network dashboard && npm run update",
+    "migrate:goerli": "truffle migrate --network goerli && npm run update",
+    "migrate:linea": "truffle migrate --network linea && npm run update",
+    "migrate:local": "truffle migrate --network development && npm run update",
+    "migrate:sepolia": "truffle migrate --network sepolia && npm run update",
     "test": "truffle test",
+    "update": "cp build/contracts/StravaSegment.json ../www/src/config/",
     "verify:goerli": "truffle run verify StravaSegment --network goerli",
+    "verify:linea": "truffle run verify StravaSegment --network linea",
     "verify:sepolia": "truffle run verify StravaSegment --network sepolia"
   },
   "devDependencies": {
