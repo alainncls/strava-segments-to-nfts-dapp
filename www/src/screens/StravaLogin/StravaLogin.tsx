@@ -9,12 +9,7 @@ import './StravaLogin.css';
 const StravaLogin = () => {
   const query = useQueryParams();
   const navigate = useNavigate();
-  const targetScope = [
-    'read',
-    'activity:read',
-    'activity:read_all',
-    'read_all',
-  ];
+  const targetScope = ['read', 'activity:read'];
 
   const [displayScopeError, setDisplayScopeError] = useState(false);
 
