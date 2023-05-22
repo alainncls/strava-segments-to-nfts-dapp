@@ -12,6 +12,7 @@ export const isKnownType = (type: string) => {
   return defaultTypes.includes(type);
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const generatePictureFromSegment = (segment: Segment): Promise<any> => {
   // Inspired by https://blog.logrocket.com/creating-saving-images-node-canvas/
   const titleText = formatTitle(segment.title);
@@ -114,10 +115,12 @@ const formatTitle = (name: string): string[] => {
   return output;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const getMaxNextLine = (input: any, maxChars = 20) => {
   // Split the string into an array of words
   const allWords = input.split(' ');
   // Find the index in the words array at which we should stop, or we will exceed maximum characters
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const lineIndex = allWords.reduce((prev: any, cur: string, index: number) => {
     if (prev?.done) return prev;
     const endLastWord = prev?.position || 0;

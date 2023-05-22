@@ -8,6 +8,7 @@
   "scripts": {
     "build": "react-scripts build",
     "eject": "react-scripts eject",
+    "homepage": "https://alainncls.github.io/strava-segments-to-nfts-dapp",
     "start": "react-scripts start",
     "test": "react-scripts test",
     "test:coverage": "npm run test -- --coverage ."
@@ -61,5 +62,8 @@
     "prettier": "^2.8.7",
     "react-scripts": "^5.0.1",
     "typescript": "^4.9.5"
+  },
+  "overrides": {
+    "@walletconnect/universal-provider": "2.7.0"
   }
 }
