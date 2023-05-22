@@ -1,5 +1,5 @@
 import { Button, Container, Modal } from 'react-bootstrap';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { generatePictureFromSegment } from '../../utils/segmentUtils';
 import { Activity, Metadata, RawSegment, Segment } from '../../types';
 import * as PolylineUtil from 'polyline-encoded';
@@ -7,11 +7,14 @@ import { uploadToIPFS } from '../../utils/ipfsUtils';
 import {
   useAccount,
   useContractWrite,
+  useNetwork,
   usePrepareContractWrite,
   useWaitForTransaction,
 } from 'wagmi';
 import SegmentItem from './SegmentItem';
 import StravaSegment from '../../config/StravaSegment.json';
+import { lineaTestnet } from 'wagmi/chains';
+import { ethers } from 'ethers';
 
 interface IProps {
   displayModal: boolean;
@@ -24,11 +27,30 @@ const SegmentsModal = (props: IProps) => {
   const { displayModal, activity, onHide, accessToken } = props;
 
   const { address, isConnected } = useAccount();
+  const { chain } = useNetwork();
 
   const [currentSegments, setCurrentSegments] = useState(activity?.segments);
   const [loadingStep, setLoadingStep] = useState<string>();
   const [error, setError] = useState<string>();
   const [segmentToMint, setSegmentToMint] = useState<Segment>();
+
+  const chainId = useMemo(() => {
+    return chain ? `${chain.id.toString()}` : lineaTestnet.id.toString();
+  }, [chain]);
+
+  const contractAddress = useMemo(() => {
+    if (!chainId) {
+      return ethers.constants.AddressZero;
+    }
+
+    const network = Object.entries(StravaSegment.networks).find(
+      (net) => net[0] === chainId
+    );
+    console.log('network', network);
+    return network
+      ? (network[1].address as `0x${string}`)
+      : ethers.constants.AddressZero;
+  }, [chainId]);
 
   useEffect(() => {
     if (activity?.segments) {
@@ -118,7 +140,7 @@ const SegmentsModal = (props: IProps) => {
   };
 
   const { config } = usePrepareContractWrite({
-    address: process.env.REACT_APP_CONTRACT_ADDRESS as `0x${string}`,
+    address: contractAddress,
     abi: StravaSegment.abi,
     functionName: 'safeMint',
     args: [address, segmentToMint?.metadata],
