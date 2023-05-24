@@ -25,12 +25,7 @@ const Header = (props: IProps) => {
           <Navbar.Collapse aria-controls={'responsive-navbar-nav'}>
             <Nav>
               <Nav.Link href={'/'}>Home</Nav.Link>
-              <Nav.Link disabled href={'/'}>
-                Features
-              </Nav.Link>
-              <Nav.Link disabled href={'/'}>
-                About
-              </Nav.Link>
+              <Nav.Link href={'/about'}>About</Nav.Link>
             </Nav>
           </Navbar.Collapse>
           {!isStravaConnected && <StravaLoginButton />}

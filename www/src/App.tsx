@@ -5,6 +5,7 @@ import { Route, Routes } from "react-router-dom";
 import Home from "./screens/Home/Home";
 import { ConnectKitProvider, getDefaultClient } from "connectkit";
 import StravaLogin from "./screens/StravaLogin/StravaLogin";
+import About from "./screens/About/About";
 
 // const infuraId = process.env.REACT_APP_INFURA_API_KEY;
 const chains = [lineaTestnet, goerli, sepolia];
@@ -26,9 +27,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/oauth" element={<StravaLogin />} />
-            {/* <Route path="about" element={<About />} />
-              <Route path="features" element={<Dashboard />} />
-              <Route path="*" element={<NoMatch />} /> */}
+            <Route path="/about" element={<About />} />
           </Routes>
         </ConnectKitProvider>
       </WagmiConfig>
