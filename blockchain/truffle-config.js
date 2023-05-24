@@ -30,7 +30,7 @@ module.exports = {
       provider: () =>
         new HDWalletProvider(
           MNEMONIC,
-          `https://consensys-zkevm-goerli-prealpha.infura.io/v3/${INFURA_API_KEY}`
+          `https://linea-goerli.infura.io/v3/${INFURA_API_KEY}`
         ),
       network_id: 59140,
     },
