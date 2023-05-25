@@ -43,7 +43,7 @@ test('renders home component with login button if no token', () => {
       <Home />
     </MemoryRouter>
   );
-  const headerElement = screen.getByRole('navigation');
+  const headerElement = screen.getByRole('banner');
   expect(headerElement).toBeInTheDocument();
 
   const imageElement = screen.getByAltText('Strava connect button');
@@ -65,7 +65,7 @@ test('renders home component with activities if the access token is found', asyn
       </MemoryRouter>
     </WagmiConfig>
   );
-  const headerElement = screen.getByRole('navigation');
+  const headerElement = screen.getByRole('banner');
   expect(headerElement).toBeInTheDocument();
 
   const imageElement = screen.queryAllByAltText('Strava connect button');

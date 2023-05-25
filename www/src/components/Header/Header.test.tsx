@@ -17,8 +17,8 @@ jest.mock('connectkit', () => ({
 
 test('renders header', () => {
   render(<Header />);
-  expect(screen.getByRole('navigation')).toBeInTheDocument();
-  expect(screen.getByText('Strava Segments to NFTs')).toBeInTheDocument();
-  expect(screen.getAllByRole('link')).toHaveLength(4);
+  expect(screen.getByRole('banner')).toBeInTheDocument();
+  expect(screen.getByText('Segments to NFTs')).toBeInTheDocument();
+  expect(screen.getAllByRole('link')).toHaveLength(3);
   expect(screen.queryByTestId(connectKitTestId)).toBeInTheDocument();
 });

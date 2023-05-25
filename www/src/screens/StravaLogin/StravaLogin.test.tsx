@@ -30,7 +30,7 @@ test('renders component to intercept the oauth2 callback', () => {
       <StravaLogin />
     </MemoryRouter>
   );
-  const headerElement = screen.getByRole('navigation');
+  const headerElement = screen.getByRole('banner');
   expect(headerElement).toBeInTheDocument();
 
   const footerElement = screen.getByRole('contentinfo');

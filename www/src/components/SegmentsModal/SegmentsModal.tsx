@@ -46,7 +46,7 @@ const SegmentsModal = (props: IProps) => {
     const network = Object.entries(StravaSegment.networks).find(
       (net) => net[0] === chainId
     );
-    console.log('network', network);
+
     return network
       ? (network[1].address as `0x${string}`)
       : ethers.constants.AddressZero;

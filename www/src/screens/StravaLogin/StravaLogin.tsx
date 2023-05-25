@@ -74,7 +74,7 @@ const StravaLogin = () => {
       </ToastContainer>
 
       <Container className="p-3">
-        <Header />
+        <Header hideButtons />
         <Footer />
       </Container>
     </>
