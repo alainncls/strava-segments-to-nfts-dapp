@@ -13,7 +13,7 @@ const chains = [lineaTestnet, goerli, sepolia];
 // Wagmi client
 const client = createClient(
   getDefaultClient({
-    appName: 'Strava NFTs',
+    appName: 'Segments to NFTs',
     // infuraId, // Remove Infura as long as it doesn't officially support Linea testnet
     chains,
   })
