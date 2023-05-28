@@ -1,0 +1,3 @@
+User-agent: *
+
+sitemap: https://strava.alainnicolas.fr/sitemap.xml
