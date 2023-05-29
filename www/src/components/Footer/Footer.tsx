@@ -1,5 +1,5 @@
 import React from 'react';
-import poweredByStrava from '../../assets/img/api_logo_pwrdBy_strava_horiz_white.svg';
+import poweredByStrava from '../../assets/img/powered-by-strava.svg';
 import { Container, Nav, Navbar } from 'react-bootstrap';
 
 const Footer = () => {
