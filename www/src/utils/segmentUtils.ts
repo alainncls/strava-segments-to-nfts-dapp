@@ -1,5 +1,4 @@
 import { createCanvas, loadImage } from 'canvas';
-import { Segment } from '../types';
 
 export const computeDistance = (distance: number) => {
   return Math.abs(distance) > 999
@@ -12,10 +11,15 @@ export const isKnownType = (type: string) => {
   return defaultTypes.includes(type);
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const generatePictureFromSegment = (segment: Segment): Promise<any> => {
+export const createPicture = (
+  title: string,
+  distance: number,
+  type: string,
+  polyline?: number[][]
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+): Promise<any> => {
   // Inspired by https://blog.logrocket.com/creating-saving-images-node-canvas/
-  const titleText = formatTitle(segment.title);
+  const titleText = formatTitle(title);
 
   const width = 1920;
   const height = 1080;
@@ -49,15 +53,15 @@ export const generatePictureFromSegment = (segment: Segment): Promise<any> => {
   }
 
   context.font = "40pt 'Sans'";
-  context.fillText(`Distance: ${segment.distance}`, 960, lengthY);
+  context.fillText(`Distance: ${distance}`, 960, lengthY);
 
   /* Start 'Draw segment shape' */
 
-  if (segment.polyline) {
+  if (polyline) {
     let minx: number, miny: number, maxx: number, maxy: number;
     miny = minx = Infinity;
     maxx = maxy = -Infinity;
-    segment.polyline.forEach((dat: number[]) => {
+    polyline.forEach((dat: number[]) => {
       minx = Math.min(minx, dat[0]);
       miny = Math.min(miny, dat[1]);
       maxx = Math.max(maxx, dat[0]);
@@ -70,7 +74,7 @@ export const generatePictureFromSegment = (segment: Segment): Promise<any> => {
     const scale = Math.min(width, height);
 
     context.beginPath();
-    segment.polyline.forEach((dat: number[]) => {
+    polyline.forEach((dat: number[]) => {
       let x = dat[0];
       let y = dat[1];
       x = ((x - minx) / range) * scale;
@@ -83,7 +87,7 @@ export const generatePictureFromSegment = (segment: Segment): Promise<any> => {
   }
   /* End 'Draw segment shape' */
 
-  return loadImage(`/img/${segment.type}.png`).then((image) => {
+  return loadImage(`/img/${type}.png`).then((image) => {
     const { w, h, x, y } = imagePosition;
     context.drawImage(image, x, y, w, h);
 

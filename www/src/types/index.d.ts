@@ -12,7 +12,13 @@ export interface Activity {
   id: string;
   name: string;
   start_date: string;
+  distance: number | string;
+  type: string;
+  polyline?: number[][];
+  map?: { summary_polyline?: string };
   segments?: Segment[];
+  picture?: string;
+  metadata?: string;
 }
 
 export interface RawSegment extends Segment {
