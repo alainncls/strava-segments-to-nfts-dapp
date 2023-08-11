@@ -21,7 +21,7 @@
     "verify:sepolia": "truffle run verify StravaSegment --network sepolia"
   },
   "devDependencies": {
-    "@openzeppelin/contracts": "^4.9.0",
+    "@openzeppelin/contracts": "^4.9.3",
     "@truffle/hdwallet-provider": "^2.1.11",
     "chai": "^4.3.7",
     "dotenv": "^16.0.3",
