@@ -1,11 +1,11 @@
-import { render, screen } from '@testing-library/react';
-import '@testing-library/jest-dom';
+import { expect, test, vi } from 'vitest';
 import Header from './Header';
 import React from 'react';
+import { render, screen } from '../../test/utils';
 
 const connectKitTestId = 'connect-kit-button';
 
-jest.mock('connectkit', () => ({
+vi.mock('connectkit', () => ({
   ConnectKitButton: () => {
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     const React = require('react');

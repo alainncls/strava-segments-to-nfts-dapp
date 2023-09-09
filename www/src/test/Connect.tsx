@@ -11,6 +11,8 @@ export function Connect() {
   const isMounted = useIsMounted();
   if (!isMounted) return null;
 
+  console.log('connectors', connectors);
+
   return (
     <div>
       <div>
@@ -26,7 +28,13 @@ export function Connect() {
         {connectors
           .filter((x) => x.ready && x.id !== connector?.id)
           .map((x) => (
-            <button key={x.id} onClick={() => connect({ connector: x })}>
+            <button
+              key={x.id}
+              onClick={() => {
+                console.log('****');
+                connect({ connector: x });
+              }}
+            >
               {isLoading && x.id === pendingConnector?.id && 'Connecting to '}
               {x.name}
             </button>

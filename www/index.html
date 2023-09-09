@@ -2,14 +2,15 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <link href="%PUBLIC_URL%/favicon-light.png" rel="icon" />
+  <link href="/favicon-light.png" rel="icon" />
   <meta content="width=device-width, initial-scale=1" name="viewport" />
   <meta content="#000000" name="theme-color" />
   <meta content="Mint NFTs for the Strava segments you have gone through" name="description" />
   <title>Segments to NFTs | Alain Nicolas</title>
+  <script type="module" src="/src/main.tsx"></script>
   <script src="./js/insights-js.umd.min.js"></script>
   <script>
-    insights.init("%REACT_APP_INSIGHTS_KEY%");
+    insights.init("%VITE_INSIGHTS_KEY%");
     insights.trackPages();
   </script>
 </head>
@@ -27,9 +28,9 @@
     }
     // replace icons with dark/light themes as appropriate
     if (darkModeOn) {
-      favicon.href = "%PUBLIC_URL%/favicon-dark.png";
+      favicon.href = "/favicon-dark.png";
     } else {
-      favicon.href = "%PUBLIC_URL%/favicon-light.png";
+      favicon.href = "/favicon-light.png";
     }
   }
 

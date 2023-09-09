@@ -1,7 +1,7 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
-import '@testing-library/jest-dom';
+import { expect, test } from 'vitest';
 import StravaLoginButton from './StravaLoginButton';
+import { render, screen } from '../../test/utils';
 
 test('renders link to launch Strava login', () => {
   render(<StravaLoginButton />);

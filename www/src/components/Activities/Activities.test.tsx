@@ -1,8 +1,9 @@
 import React from 'react';
-import { fireEvent, render, screen } from '@testing-library/react';
-import '@testing-library/jest-dom';
+import { beforeEach, expect, test, vi } from 'vitest';
 import Activities from './Activities';
 import { Activity } from '../../types';
+import { render, screen } from '../../test/utils';
+import { fireEvent } from '@testing-library/react';
 
 let activities: Activity[];
 let checkForSegments: (activityId: string) => void;
@@ -21,8 +22,8 @@ beforeEach(() => {
       start_date: '2022-06-02T18:02:13Z',
     },
   ];
-  checkForSegments = jest.fn();
-  displaySegments = jest.fn();
+  checkForSegments = vi.fn();
+  displaySegments = vi.fn();
 });
 
 test('renders activities', () => {

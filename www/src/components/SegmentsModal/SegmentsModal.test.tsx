@@ -1,10 +1,11 @@
 import React from 'react';
-import { fireEvent, render, screen } from '@testing-library/react';
-import '@testing-library/jest-dom';
+import { beforeEach, expect, test, vi } from 'vitest';
 import SegmentsModal from './SegmentsModal';
-import { setupClient } from '../../test';
+import { setupConfig } from '../../test';
 import { WagmiConfig } from 'wagmi';
 import { Activity } from '../../types';
+import { render, screen } from '../../test/utils';
+import { fireEvent } from '@testing-library/react';
 
 let displayModal: boolean;
 let onHide: () => void;
@@ -27,12 +28,12 @@ const activity: Activity = {
 
 beforeEach(() => {
   displayModal = true;
-  onHide = jest.fn();
+  onHide = vi.fn();
 });
 
 test('renders visible modal', () => {
   render(
-    <WagmiConfig client={setupClient()}>
+    <WagmiConfig config={setupConfig()}>
       <SegmentsModal
         displayModal={displayModal}
         onHide={onHide}
@@ -48,7 +49,7 @@ test('renders invisible modal', () => {
   displayModal = false;
 
   render(
-    <WagmiConfig client={setupClient()}>
+    <WagmiConfig config={setupConfig()}>
       <SegmentsModal
         displayModal={displayModal}
         onHide={onHide}
@@ -62,7 +63,7 @@ test('renders invisible modal', () => {
 
 test('renders closable modal', () => {
   render(
-    <WagmiConfig client={setupClient()}>
+    <WagmiConfig config={setupConfig()}>
       <SegmentsModal
         displayModal={displayModal}
         onHide={onHide}

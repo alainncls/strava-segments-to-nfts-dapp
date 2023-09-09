@@ -5,7 +5,11 @@ const StravaLoginButton = () => {
   return (
     <div>
       <a
-        href={`https://www.strava.com/oauth/authorize?client_id=${process.env.REACT_APP_STRAVA_CLIENT_ID}&response_type=code&scope=read,activity:read&redirect_uri=${process.env.REACT_APP_OAUTH_URL}`}
+        href={`https://www.strava.com/oauth/authorize?client_id=${
+          import.meta.env.VITE_STRAVA_CLIENT_ID
+        }&response_type=code&scope=read,activity:read&redirect_uri=${
+          import.meta.env.VITE_OAUTH_URL
+        }`}
       >
         <img alt={'Strava connect button'} src={btnStrava} />
       </a>

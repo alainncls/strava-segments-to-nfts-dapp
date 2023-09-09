@@ -1,12 +1,12 @@
-import { render, screen } from '@testing-library/react';
-import '@testing-library/jest-dom';
+import { expect, test, vi } from 'vitest';
 import { MemoryRouter } from 'react-router-dom';
 import React from 'react';
-import { setupClient } from './test';
+import { setupConfig } from './test';
 import Home from './screens/Home/Home';
 import { WagmiConfig } from 'wagmi';
+import { render, screen } from './test/utils';
 
-jest.mock('connectkit', () => ({
+vi.mock('connectkit', () => ({
   ConnectKitButton: () => {
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     const React = require('react');
@@ -16,7 +16,7 @@ jest.mock('connectkit', () => ({
 
 test('renders app', () => {
   render(
-    <WagmiConfig client={setupClient()}>
+    <WagmiConfig config={setupConfig()}>
       <MemoryRouter initialEntries={[{ pathname: '/' }]}>
         <Home />
       </MemoryRouter>

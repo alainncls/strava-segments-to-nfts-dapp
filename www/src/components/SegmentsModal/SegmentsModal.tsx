@@ -14,7 +14,6 @@ import {
 import SegmentItem from './SegmentItem';
 import StravaSegment from '../../config/StravaSegment.json';
 import { lineaTestnet } from 'wagmi/chains';
-import { ethers } from 'ethers';
 
 interface IProps {
   displayModal: boolean;
@@ -40,7 +39,7 @@ const SegmentsModal = (props: IProps) => {
 
   const contractAddress = useMemo(() => {
     if (!chainId) {
-      return ethers.constants.AddressZero;
+      return '0x0000000000000000000000000000000000000000';
     }
 
     const network = Object.entries(StravaSegment.networks).find(
@@ -49,7 +48,7 @@ const SegmentsModal = (props: IProps) => {
 
     return network
       ? (network[1].address as `0x${string}`)
-      : ethers.constants.AddressZero;
+      : '0x0000000000000000000000000000000000000000';
   }, [chainId]);
 
   useEffect(() => {
@@ -66,9 +65,8 @@ const SegmentsModal = (props: IProps) => {
             currentSegment.polyline = PolylineUtil.decode(
               (await getSegment(currentSegment.id)).map.polyline
             );
-            currentSegment.picture = await generatePictureFromSegment(
-              currentSegment
-            );
+            currentSegment.picture =
+              await generatePictureFromSegment(currentSegment);
           }
           return currentSegment;
         })
@@ -118,7 +116,7 @@ const SegmentsModal = (props: IProps) => {
     metadata: Metadata,
     segment: Segment
   ): Promise<void> => {
-    const metadataIpfs = await uploadToIPFS(JSON.stringify(metadata));
+    const metadataIpfs = await uploadToIPFS(metadata);
 
     const matchingSegment = currentSegments?.find(
       (seg) => seg.id === segment.id
