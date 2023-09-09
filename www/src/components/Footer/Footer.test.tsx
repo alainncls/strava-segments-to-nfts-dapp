@@ -1,7 +1,7 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
-import '@testing-library/jest-dom';
+import { expect, test } from 'vitest';
 import Footer from './Footer';
+import { render, screen } from '../../test/utils';
 
 test('renders footer', () => {
   render(<Footer />);

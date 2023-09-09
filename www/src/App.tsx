@@ -1,20 +1,19 @@
-import React from "react";
-import { createClient, WagmiConfig } from "wagmi";
-import { goerli, lineaTestnet, sepolia } from "wagmi/chains";
-import { Route, Routes } from "react-router-dom";
-import Home from "./screens/Home/Home";
-import { ConnectKitProvider, getDefaultClient } from "connectkit";
-import StravaLogin from "./screens/StravaLogin/StravaLogin";
-import About from "./screens/About/About";
+import React from 'react';
+import { createConfig, WagmiConfig } from 'wagmi';
+import { goerli, lineaTestnet, sepolia } from 'wagmi/chains';
+import { Route, Routes } from 'react-router-dom';
+import Home from './screens/Home/Home';
+import { ConnectKitProvider, getDefaultConfig } from 'connectkit';
+import StravaLogin from './screens/StravaLogin/StravaLogin';
+import About from './screens/About/About';
 
-// const infuraId = process.env.REACT_APP_INFURA_API_KEY;
 const chains = [lineaTestnet, goerli, sepolia];
 
-// Wagmi client
-const client = createClient(
-  getDefaultClient({
+const config = createConfig(
+  getDefaultConfig({
+    infuraId: import.meta.env.VITE_INFURA_API_KEY,
+    walletConnectProjectId: import.meta.env.VITE_WALLETCONNECT_PROJECT_ID || '',
     appName: 'Segments to NFTs',
-    // infuraId, // Remove Infura as long as it doesn't officially support Linea testnet
     chains,
   })
 );
@@ -22,7 +21,7 @@ const client = createClient(
 function App() {
   return (
     <React.StrictMode>
-      <WagmiConfig client={client}>
+      <WagmiConfig config={config}>
         <ConnectKitProvider>
           <Routes>
             <Route path="/" element={<Home />} />

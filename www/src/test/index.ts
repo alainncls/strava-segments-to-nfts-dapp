@@ -1,26 +1,17 @@
-import { Chain, createClient } from 'wagmi';
-import { getProvider, getSigners } from './utils';
-import { MockConnector } from 'wagmi/connectors/mock';
+import { configureChains, createConfig } from 'wagmi';
+import { lineaTestnet } from 'wagmi/chains';
+import { publicProvider } from 'wagmi/providers/public';
 
-type Config = { chains?: Chain[] };
+const { publicClient, webSocketPublicClient } = configureChains(
+  [lineaTestnet],
+  [publicProvider()]
+);
 
-export const connector = new MockConnector({
-  options: {
-    signer: getSigners()[0],
-  },
-});
-
-export function setupClient(config: Config = {}) {
-  return createClient({
-    connectors: [connector],
-    provider: ({ chainId }) => getProvider({ chainId, chains: config.chains }),
-    ...config,
+export function setupConfig() {
+  return createConfig({
+    publicClient,
+    webSocketPublicClient,
   });
 }
 
-export {
-  getProvider,
-  getWebSocketProvider,
-  getSigners,
-  testChains,
-} from './utils';
+export { testChains } from './utils';

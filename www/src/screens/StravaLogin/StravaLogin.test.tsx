@@ -1,10 +1,10 @@
-import { render, screen } from '@testing-library/react';
-import '@testing-library/jest-dom';
+import { beforeEach, expect, test, vi } from 'vitest';
 import StravaLogin from './StravaLogin';
 import { MemoryRouter } from 'react-router-dom';
 import React from 'react';
+import { render, screen } from '../../test/utils';
 
-jest.mock('connectkit', () => ({
+vi.mock('connectkit', () => ({
   ConnectKitButton: () => {
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     const React = require('react');
@@ -13,7 +13,7 @@ jest.mock('connectkit', () => ({
 }));
 
 beforeEach(() => {
-  global.fetch = jest.fn(() =>
+  global.fetch = vi.fn(() =>
     Promise.resolve({
       json: () =>
         Promise.resolve({
@@ -21,7 +21,7 @@ beforeEach(() => {
           access_token: 'accessToken',
         }),
     })
-  ) as jest.Mock;
+  );
 });
 
 test('renders component to intercept the oauth2 callback', () => {

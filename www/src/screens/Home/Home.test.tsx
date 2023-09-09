@@ -1,13 +1,13 @@
-import { render, screen } from '@testing-library/react';
-import '@testing-library/jest-dom';
+import { beforeEach, expect, test, vi } from 'vitest';
 import { MemoryRouter } from 'react-router-dom';
 import React from 'react';
 import Home from './Home';
 import { WagmiConfig } from 'wagmi';
-import { setupClient } from '../../test';
+import { setupConfig } from '../../test';
 import { Activity } from '../../types';
+import { render, screen } from '../../test/utils';
 
-jest.mock('connectkit', () => ({
+vi.mock('connectkit', () => ({
   ConnectKitButton: () => {
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     const React = require('react');
@@ -30,11 +30,11 @@ const activities = [activity1, activity2];
 beforeEach(() => {
   window.sessionStorage.clear();
 
-  global.fetch = jest.fn(() =>
+  global.fetch = vi.fn(() =>
     Promise.resolve({
       json: () => Promise.resolve(activities),
     })
-  ) as jest.Mock;
+  );
 });
 
 test('renders home component with login button if no token', () => {
@@ -59,7 +59,7 @@ test('renders home component with activities if the access token is found', asyn
   window.sessionStorage.setItem('tokenCreationDate', Date().toString());
 
   render(
-    <WagmiConfig client={setupClient()}>
+    <WagmiConfig config={setupConfig()}>
       <MemoryRouter initialEntries={[{ pathname: '/' }]}>
         <Home />
       </MemoryRouter>
@@ -89,7 +89,7 @@ test('renders home component with token refreshing feature', async () => {
     new Date('Wed Jun 07 2022 22:42:25').toString()
   );
 
-  global.fetch = jest.fn(() =>
+  global.fetch = vi.fn(() =>
     Promise.resolve({
       json: () =>
         Promise.resolve({
@@ -97,7 +97,7 @@ test('renders home component with token refreshing feature', async () => {
           access_token: 'newAccessToken',
         }),
     })
-  ) as jest.Mock;
+  );
 
   render(
     <MemoryRouter initialEntries={[{ pathname: '/' }]}>
@@ -121,14 +121,14 @@ test('renders home component able to find segments in activities', async () => {
   window.sessionStorage.setItem('tokenCreationDate', Date().toString());
 
   render(
-    <WagmiConfig client={setupClient()}>
+    <WagmiConfig config={setupConfig()}>
       <MemoryRouter initialEntries={[{ pathname: '/' }]}>
         <Home />
       </MemoryRouter>
     </WagmiConfig>
   );
 
-  global.fetch = jest.fn(() =>
+  global.fetch = vi.fn(() =>
     Promise.resolve({
       json: () =>
         Promise.resolve({
@@ -138,7 +138,7 @@ test('renders home component able to find segments in activities', async () => {
           },
         }),
     })
-  ) as jest.Mock;
+  );
 
   const modalElement = screen.queryByText('Segments in');
   expect(modalElement).not.toBeInTheDocument();

@@ -19,8 +19,8 @@ const Home = () => {
 
   useEffect(() => {
     if (refreshToken && !isTokenValid()) {
-      const clientID = process.env.REACT_APP_STRAVA_CLIENT_ID;
-      const clientSecret = process.env.REACT_APP_STRAVA_CLIENT_SECRET;
+      const clientID = import.meta.env.VITE_STRAVA_CLIENT_ID;
+      const clientSecret = import.meta.env.VITE_STRAVA_CLIENT_SECRET;
       fetch(
         `https://www.strava.com/oauth/token?client_id=${clientID}&client_secret=${clientSecret}&refresh_token=${refreshToken}&grant_type=refresh_token`,
         {
