@@ -1,4 +1,4 @@
-import { beforeEach, expect, test, vi } from 'vitest';
+import { beforeEach, expect, Mock, test, vi } from 'vitest';
 import { MemoryRouter } from 'react-router-dom';
 import React from 'react';
 import Home from './Home';
@@ -34,7 +34,7 @@ beforeEach(() => {
     Promise.resolve({
       json: () => Promise.resolve(activities),
     })
-  );
+  ) as Mock;
 });
 
 test('renders home component with login button if no token', () => {
@@ -97,7 +97,7 @@ test('renders home component with token refreshing feature', async () => {
           access_token: 'newAccessToken',
         }),
     })
-  );
+  ) as Mock;
 
   render(
     <MemoryRouter initialEntries={[{ pathname: '/' }]}>
@@ -138,7 +138,7 @@ test('renders home component able to find segments in activities', async () => {
           },
         }),
     })
-  );
+  ) as Mock;
 
   const modalElement = screen.queryByText('Segments in');
   expect(modalElement).not.toBeInTheDocument();

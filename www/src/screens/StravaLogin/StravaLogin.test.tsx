@@ -1,4 +1,4 @@
-import { beforeEach, expect, test, vi } from 'vitest';
+import { beforeEach, expect, Mock, test, vi } from 'vitest';
 import StravaLogin from './StravaLogin';
 import { MemoryRouter } from 'react-router-dom';
 import React from 'react';
@@ -21,7 +21,7 @@ beforeEach(() => {
           access_token: 'accessToken',
         }),
     })
-  );
+  ) as Mock;
 });
 
 test('renders component to intercept the oauth2 callback', () => {
