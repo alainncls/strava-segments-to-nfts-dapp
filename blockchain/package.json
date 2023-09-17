@@ -3,30 +3,19 @@
   "version": "0.0.1",
   "description": "Decentralized application aiming to generate an NFT for each new unique and eligible segment a Strava user runs through. ",
   "repository": "git@github.com:alainncls/strava-segments-to-nfts-dapp.git",
-  "license": "ISC",
   "author": "Alain Nicolas",
-  "main": "index.js",
   "scripts": {
-    "compile": "truffle compile && npm run update",
-    "dashboard": "truffle dashboard",
-    "migrate:dashboard": "truffle migrate --network dashboard && npm run update",
-    "migrate:goerli": "truffle migrate --network goerli && npm run update",
-    "migrate:linea": "truffle migrate --network linea && npm run update",
-    "migrate:local": "truffle migrate --network development && npm run update",
-    "migrate:sepolia": "truffle migrate --network sepolia && npm run update",
-    "test": "truffle test",
-    "update": "cp build/contracts/StravaSegment.json ../www/src/config/",
-    "verify:goerli": "truffle run verify StravaSegment --network goerli",
-    "verify:linea": "truffle run verify StravaSegment --network linea",
-    "verify:sepolia": "truffle run verify StravaSegment --network sepolia"
+    "compile": "hardhat compile && npm run update",
+    "deploy:goerli": "hardhat run --network goerli scripts/deploy.ts && npm run update",
+    "deploy:linea-goerli": "hardhat run --network linea-goerli scripts/deploy.ts && npm run update",
+    "deploy:sepolia": "hardhat run --network sepolia scripts/deploy.ts && npm run update",
+    "test": "hardhat test",
+    "update": "cp artifacts/contracts/StravaSegment.sol/StravaSegment.json ../www/src/config/"
   },
   "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^3.0.0",
     "@openzeppelin/contracts": "^4.9.3",
-    "@truffle/hdwallet-provider": "^2.1.15",
-    "chai": "^4.3.8",
     "dotenv": "^16.3.1",
-    "truffle": "^5.11.4",
-    "truffle-assertions": "^0.9.2",
-    "truffle-plugin-verify": "^0.6.3"
+    "hardhat": "^2.17.3"
   }
 }
