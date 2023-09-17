@@ -20,8 +20,8 @@ a [webapp](https://github.com/alainncls/strava-segments-to-nfts-webapp), now bot
 
 1. Copy the `.env.example` file to a `.env` file
 2. Fill it with your Infura identifiers for chain access
-3. If you want to use Truffle the old way, add you mnemonic
-4. If you want to verify your instance of the contract on Etherscan, add your Etherscan API key
+3. Add your private key to deploy the contract
+4. Add your Lineascan and/or Etherscan API key(s) to verify the contract on Lineascan/Etherscan
 
 ### 3. Install dependencies
 
@@ -33,14 +33,7 @@ a [webapp](https://github.com/alainncls/strava-segments-to-nfts-webapp), now bot
 
 ### 5. Deploy the contract
 
-#### Truffle legacy way
-
-    npm run migrate:sepolia
-
-#### With Truffle Dashboard
-
-    npm run dashboard
-    npm run migrate dashboard
+    npm run deploy:linea-goerli
 
 ## How to launch the web app
 

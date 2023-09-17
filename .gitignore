@@ -6,3 +6,6 @@
 .env.local
 blockchain/.env
 dist
+cache
+typechain-types
+artifacts
