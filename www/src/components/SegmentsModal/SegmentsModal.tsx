@@ -116,7 +116,7 @@ const SegmentsModal = (props: IProps) => {
     metadata: Metadata,
     segment: Segment
   ): Promise<void> => {
-    const metadataIpfs = await uploadToIPFS(metadata);
+    const metadataIpfs = await uploadToIPFS(JSON.stringify(metadata));
 
     const matchingSegment = currentSegments?.find(
       (seg) => seg.id === segment.id

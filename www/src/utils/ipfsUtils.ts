@@ -24,7 +24,9 @@ export interface IpfsError {
 
 export type IpfsDataOrError = IpfsData | IpfsError;
 
-export async function uploadToIPFS(data: Blob | Metadata): Promise<string> {
+export async function uploadToIPFS(
+  data: Blob | Metadata | string
+): Promise<string> {
   const result = await callIpfsCommand('add', data);
   return 'ipfs://' + result.Hash;
 }
@@ -37,7 +39,7 @@ function isIpfsData(
 
 async function callIpfsCommand(
   args: string,
-  data: Blob | Metadata
+  data: Blob | Metadata | string
 ): Promise<IpfsData> {
   const auth =
     'Basic ' + Buffer.from(projectId + ':' + projectSecret).toString('base64');
