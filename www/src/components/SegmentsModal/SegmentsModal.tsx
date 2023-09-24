@@ -1,7 +1,14 @@
 import { Button, Container, Modal } from 'react-bootstrap';
 import React, { useEffect, useMemo, useState } from 'react';
 import { generatePictureFromSegment } from '../../utils/segmentUtils';
-import { Activity, Metadata, RawSegment, Segment } from '../../types';
+import {
+  Activity,
+  Config,
+  Metadata,
+  NetworkConfig,
+  RawSegment,
+  Segment,
+} from '../../types';
 import * as PolylineUtil from 'polyline-encoded';
 import { uploadToIPFS } from '../../utils/ipfsUtils';
 import {
@@ -12,8 +19,10 @@ import {
   useWaitForTransaction,
 } from 'wagmi';
 import SegmentItem from './SegmentItem';
-import StravaSegment from '../../config/StravaSegment.json';
+import _StravaSegment from '../../config/StravaSegment.json';
 import { lineaTestnet } from 'wagmi/chains';
+
+const StravaSegment = _StravaSegment as NetworkConfig;
 
 interface IProps {
   displayModal: boolean;
@@ -37,18 +46,10 @@ const SegmentsModal = (props: IProps) => {
     return chain ? `${chain.id.toString()}` : lineaTestnet.id.toString();
   }, [chain]);
 
-  const contractAddress = useMemo(() => {
-    if (!chainId) {
-      return '0x0000000000000000000000000000000000000000';
-    }
-
-    const network = Object.entries(StravaSegment.networks).find(
-      (net) => net[0] === chainId
+  const networkConfig: Config | undefined = useMemo(() => {
+    return StravaSegment.networks.find(
+      (network) => network.chainId === chainId
     );
-
-    return network
-      ? (network[1].address as `0x${string}`)
-      : '0x0000000000000000000000000000000000000000';
   }, [chainId]);
 
   useEffect(() => {
@@ -138,8 +139,8 @@ const SegmentsModal = (props: IProps) => {
   };
 
   const { config } = usePrepareContractWrite({
-    address: contractAddress,
-    abi: StravaSegment.abi,
+    address: networkConfig?.address,
+    abi: networkConfig?.abi,
     functionName: 'safeMint',
     args: [address, segmentToMint?.metadata],
     enabled: Boolean(isConnected && address && segmentToMint?.metadata),

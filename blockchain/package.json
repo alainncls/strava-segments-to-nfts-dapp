@@ -5,12 +5,11 @@
   "repository": "git@github.com:alainncls/strava-segments-to-nfts-dapp.git",
   "author": "Alain Nicolas",
   "scripts": {
-    "compile": "hardhat compile && npm run update",
-    "deploy:goerli": "hardhat run --network goerli scripts/deploy.ts && npm run update",
-    "deploy:linea-goerli": "hardhat run --network linea-goerli scripts/deploy.ts && npm run update",
-    "deploy:sepolia": "hardhat run --network sepolia scripts/deploy.ts && npm run update",
-    "test": "hardhat test",
-    "update": "cp artifacts/contracts/StravaSegment.sol/StravaSegment.json ../www/src/config/"
+    "compile": "hardhat compile",
+    "deploy:goerli": "hardhat run --network goerli scripts/deploy.ts",
+    "deploy:linea-goerli": "hardhat run --network linea-goerli scripts/deploy.ts",
+    "deploy:sepolia": "hardhat run --network sepolia scripts/deploy.ts",
+    "test": "hardhat test"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^3.0.0",

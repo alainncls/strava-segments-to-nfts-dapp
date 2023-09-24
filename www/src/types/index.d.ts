@@ -39,3 +39,13 @@ export interface Metadata {
   image: string;
   attributes: Attribute[];
 }
+
+interface Config {
+  chainId: string;
+  abi: any;
+  address: `0x${string}`;
+}
+
+interface NetworkConfig {
+  networks: Config[];
+}
