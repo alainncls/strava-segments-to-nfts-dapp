@@ -7,6 +7,7 @@ import SegmentsModal from '../../components/SegmentsModal/SegmentsModal';
 import Footer from '../../components/Footer/Footer';
 import { computeDistance, isKnownType } from '../../utils/segmentUtils';
 import { Activity, Segment, SegmentEffort } from '../../types';
+import PolylineUtil from 'polyline-encoded';
 
 const Home = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -67,7 +68,18 @@ const Home = () => {
       )
         .then((res) => res.json())
         .then((data) => {
-          setActivities(data);
+          setActivities(
+            data.map((activity: Activity) => {
+              activity.distance = computeDistance(activity.distance as number);
+              activity.polyline = PolylineUtil.decode(
+                activity?.map?.summary_polyline
+              );
+              activity.type = isKnownType(activity.type)
+                ? activity.type
+                : 'default';
+              return activity;
+            })
+          );
         })
         .catch((e) => console.error(e))
         .finally(() => setIsLoading(false));
@@ -121,6 +133,13 @@ const Home = () => {
         .finally(() => {
           setActivities(
             activities.map((activity) => {
+              activity.distance = computeDistance(activity.distance as number);
+              activity.polyline = PolylineUtil.decode(
+                activity?.map?.summary_polyline
+              );
+              activity.type = isKnownType(activity.type)
+                ? activity.type
+                : 'default';
               if (activity.id === activityId) {
                 activity.segments = segments;
               }

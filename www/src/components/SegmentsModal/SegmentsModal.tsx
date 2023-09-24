@@ -1,6 +1,6 @@
 import { Button, Container, Modal } from 'react-bootstrap';
 import React, { useEffect, useMemo, useState } from 'react';
-import { generatePictureFromSegment } from '../../utils/segmentUtils';
+import { createPicture } from '../../utils/segmentUtils';
 import {
   Activity,
   Config,
@@ -67,7 +67,12 @@ const SegmentsModal = (props: IProps) => {
               (await getSegment(currentSegment.id)).map.polyline
             );
             currentSegment.picture =
-              await generatePictureFromSegment(currentSegment);
+              await createPicture(
+              currentSegment.title,
+              currentSegment.distance,
+              currentSegment.type,
+              currentSegment.polyline
+            );
           }
           return currentSegment;
         })
@@ -79,9 +84,9 @@ const SegmentsModal = (props: IProps) => {
   const convertToBlob = async (content: string) =>
     fetch(content).then((res) => res.blob());
 
-  const uploadPictureToIpfs = async (segment: Segment) => {
-    if (segment.picture) {
-      return await uploadToIPFS(await convertToBlob(segment.picture));
+  const uploadPictureToIpfs = async (picture?: string) => {
+    if (picture) {
+      return await uploadToIPFS(await convertToBlob(picture));
     }
   };
 
@@ -156,7 +161,7 @@ const SegmentsModal = (props: IProps) => {
     await generatePicture(segment);
 
     setLoadingStep('Upload picture to IPFS');
-    const pictureIpfs = await uploadPictureToIpfs(segment);
+    const pictureIpfs = await uploadPictureToIpfs(segment.picture);
 
     if (pictureIpfs) {
       setLoadingStep('Generate metadata');
