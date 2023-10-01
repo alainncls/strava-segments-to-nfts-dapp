@@ -25,15 +25,15 @@ a [webapp](https://github.com/alainncls/strava-segments-to-nfts-webapp), now bot
 
 ### 3. Install dependencies
 
-    npm install
+    pnpm install
 
 ### 4. Compile the contract
 
-    npm run compile
+    pnpm run compile
 
 ### 5. Deploy the contract
 
-    npm run deploy:linea-goerli
+    pnpm run deploy:linea-goerli
 
 ## How to launch the web app
 
@@ -51,21 +51,21 @@ a [webapp](https://github.com/alainncls/strava-segments-to-nfts-webapp), now bot
 
 ### 3. Install dependencies
 
-    npm install
+    pnpm install
 
 ### 4. Run the app
 
-    npm run start
+    pnpm run start
 
 ## How to test
 
 ### Run unit tests with watch
 
-    npm run test
+    pnpm run test
 
 ### Run unit tests with coverage
 
-    npm run test:coverage
+    pnpm run test:coverage
 
 ## Technical notes/ideas
 
