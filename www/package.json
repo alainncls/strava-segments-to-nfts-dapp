@@ -1,5 +1,5 @@
 {
-  "name": "strava-segments-to-nfts-dapp",
+  "name": "strava-segments-to-nfts-dapp-webapp",
   "version": "0.0.1",
   "description": "Decentralized application aiming to generate an NFT for each new unique and eligible segment a Strava user runs\nthrough. ",
   "homepage": "https://alainncls.github.io/strava-segments-to-nfts-dapp",

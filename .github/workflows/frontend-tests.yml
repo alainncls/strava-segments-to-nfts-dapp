@@ -9,11 +9,8 @@ on:
       - main
 jobs:
   frontend-tests:
-    defaults:
-      run:
-        working-directory: www
-
     name: Tests
+
     runs-on: ubuntu-latest
 
     steps:
@@ -22,25 +19,25 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Setup pnpm 8
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
       - name: Setup NodeJS 18
         uses: actions/setup-node@v3
         with:
-          node-version: '18'
+          node-version: 18
+          cache: 'pnpm'
 
-      - name: Show NodeJS & NPM versions
-        run: node --version && npm --version
-
-      - name: Cache node_modules
-        uses: actions/cache@v3
-        with:
-          path: '**/node_modules'
-          key: ${{ runner.os }}-modules-${{ hashFiles('**/package-lock.json') }}
+      - name: Show NodeJS & pnpm versions
+        run: node --version && pnpm --version
 
       - name: Install Dependencies
-        run: npm ci
+        run: pnpm install
 
       - name: Run unit tests and generate coverage report
-        run: npm run test:coverage
+        run: cd www && pnpm run test:coverage
 
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
