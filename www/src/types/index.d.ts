@@ -42,7 +42,7 @@ export interface Metadata {
 
 interface Config {
   chainId: string;
-  abi: any;
+  abi: unknown;
   address: `0x${string}`;
 }
 

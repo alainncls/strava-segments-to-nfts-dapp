@@ -1,36 +1,26 @@
 {
   "compilerOptions": {
     "target": "ESNext",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "composite": true,
+    "declaration": true,
+    "declarationMap": true,
+    "incremental": true,
     "allowJs": false,
     "skipLibCheck": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
-    "module": "esnext",
+    "module": "commonjs",
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
     "noFallthroughCasesInSwitch": true,
     "jsx": "react-jsx",
-    "types": [
-      "vite/client",
-      "vite-plugin-svgr/client"
-    ]
+    "types": ["vite/client", "vite-plugin-svgr/client"]
   },
-  "include": [
-    "src",
-    "src/setupTests.ts",
-    "@testing-library/jest-dom"
-  ],
-  "exclude": [
-    "build",
-    "node_modules"
-  ]
+  "include": ["www", "blockchain"],
+  "exclude": ["**/build", "**/node_modules", "www/public/js"]
 }

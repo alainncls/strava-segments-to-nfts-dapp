@@ -6,9 +6,9 @@
 
 Decentralized application aiming to generate NFTs for Strava activities and segments.
 
-This project started as a centralized application, with
-a [backend](https://github.com/alainncls/strava-segments-to-nfts) and
-a [webapp](https://github.com/alainncls/strava-segments-to-nfts-webapp), now both deprecated.
+This project started as a centralized application, with a
+[backend](https://github.com/alainncls/strava-segments-to-nfts) and a
+[webapp](https://github.com/alainncls/strava-segments-to-nfts-webapp), now both deprecated.
 
 ## How to use the NFT contract
 

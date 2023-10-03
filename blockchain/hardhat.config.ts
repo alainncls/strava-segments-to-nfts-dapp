@@ -4,32 +4,21 @@ import dotenv from "dotenv";
 
 dotenv.config({ path: "./.env" });
 const config: HardhatUserConfig = {
-  solidity: "0.8.18",
+  solidity: "0.8.21",
   defaultNetwork: "linea-goerli",
   networks: {
     hardhat: {},
     goerli: {
       url: `https://goerli.infura.io/v3/${process.env.INFURA_API_KEY ?? ""}`,
-      accounts: [
-        process.env.PRIVATE_KEY ??
-          "0000000000000000000000000000000000000000000000000000000000000000",
-      ],
+      accounts: [process.env.PRIVATE_KEY ?? "0000000000000000000000000000000000000000000000000000000000000000"],
     },
     sepolia: {
       url: `https://sepolia.infura.io/v3/${process.env.INFURA_API_KEY ?? ""}`,
-      accounts: [
-        process.env.PRIVATE_KEY ??
-          "0000000000000000000000000000000000000000000000000000000000000000",
-      ],
+      accounts: [process.env.PRIVATE_KEY ?? "0000000000000000000000000000000000000000000000000000000000000000"],
     },
     "linea-goerli": {
-      url: `https://linea-goerli.infura.io/v3/${
-        process.env.INFURA_API_KEY ?? ""
-      }`,
-      accounts: [
-        process.env.PRIVATE_KEY ??
-          "0000000000000000000000000000000000000000000000000000000000000000",
-      ],
+      url: `https://linea-goerli.infura.io/v3/${process.env.INFURA_API_KEY ?? ""}`,
+      accounts: [process.env.PRIVATE_KEY ?? "0000000000000000000000000000000000000000000000000000000000000000"],
     },
   },
   etherscan: {

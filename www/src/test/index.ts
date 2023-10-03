@@ -1,11 +1,8 @@
-import { configureChains, createConfig } from 'wagmi';
-import { lineaTestnet } from 'wagmi/chains';
-import { publicProvider } from 'wagmi/providers/public';
+import { configureChains, createConfig } from "wagmi";
+import { lineaTestnet } from "wagmi/chains";
+import { publicProvider } from "wagmi/providers/public";
 
-const { publicClient, webSocketPublicClient } = configureChains(
-  [lineaTestnet],
-  [publicProvider()]
-);
+const { publicClient, webSocketPublicClient } = configureChains([lineaTestnet], [publicProvider()]);
 
 export function setupConfig() {
   return createConfig({
@@ -14,4 +11,4 @@ export function setupConfig() {
   });
 }
 
-export { testChains } from './utils';
+export { testChains } from "./utils";
