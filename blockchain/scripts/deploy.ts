@@ -6,7 +6,7 @@ import { Buffer } from "node:buffer";
 
 interface Config {
   chainId: string;
-  abi: any;
+  abi: unknown;
   address: string;
 }
 
@@ -27,9 +27,7 @@ async function main() {
     address: stravaSegmentAddress,
   });
 
-  console.log(
-    `StravaSegment contract successfully deployed and verified at ${stravaSegmentAddress}!`,
-  );
+  console.log(`StravaSegment contract successfully deployed and verified at ${stravaSegmentAddress}!`);
 
   console.log(`Generating config file...`);
 
@@ -43,12 +41,10 @@ async function main() {
   const newConfig: Config = {
     chainId,
     address: stravaSegmentAddress,
-    abi: stravaSegmentJson.abi,
+    abi: stravaSegmentJson.abi as unknown,
   };
 
-  const index = networks.findIndex(
-    (network) => network.chainId === newConfig.chainId,
-  );
+  const index = networks.findIndex((network) => network.chainId === newConfig.chainId);
 
   if (index < 0) {
     networks[networks.length] = newConfig;
@@ -58,9 +54,7 @@ async function main() {
 
   const frontendConfig: NetworkConfig = { networks };
 
-  const data = new Uint8Array(
-    Buffer.from(JSON.stringify(frontendConfig, null, 2)),
-  );
+  const data = new Uint8Array(Buffer.from(JSON.stringify(frontendConfig, null, 2)));
 
   writeFile("../www/src/config/StravaSegment.json", data, (err) => {
     if (err) throw err;

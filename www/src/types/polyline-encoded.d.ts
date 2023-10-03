@@ -1,1 +1,1 @@
-declare module 'polyline-encoded';
+declare module "polyline-encoded";

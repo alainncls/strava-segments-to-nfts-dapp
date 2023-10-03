@@ -1,0 +1,12 @@
+# directories
+node_modules
+coverage
+artifacts
+cache_hardhat
+typechain-types
+
+# files
+*.env
+.DS_Store
+lcov.info
+pnpm-lock.yaml

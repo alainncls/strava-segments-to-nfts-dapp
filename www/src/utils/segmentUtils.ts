@@ -1,14 +1,12 @@
-import { createCanvas, loadImage } from 'canvas';
-import { Segment } from '../types';
+import { createCanvas, loadImage } from "canvas";
+import { Segment } from "../types";
 
 export const computeDistance = (distance: number) => {
-  return Math.abs(distance) > 999
-    ? (Math.abs(distance) / 1000).toFixed(1) + 'km'
-    : Math.abs(distance).toFixed(0) + 'm';
+  return Math.abs(distance) > 999 ? (Math.abs(distance) / 1000).toFixed(1) + "km" : Math.abs(distance).toFixed(0) + "m";
 };
 
 export const isKnownType = (type: string) => {
-  const defaultTypes = ['Ride', 'AlpineSki'];
+  const defaultTypes = ["Ride", "AlpineSki"];
   return defaultTypes.includes(type);
 };
 
@@ -33,14 +31,14 @@ export const generatePictureFromSegment = (segment: Segment): Promise<any> => {
   const lengthY = titleText.length === 2 ? 840 : 800;
 
   const canvas = createCanvas(width, height);
-  const context = canvas.getContext('2d');
+  const context = canvas.getContext("2d");
 
-  context.fillStyle = '#204077';
+  context.fillStyle = "#204077";
   context.fillRect(0, 0, width, height);
 
   context.font = "bold 70pt 'Sans'";
-  context.textAlign = 'center';
-  context.fillStyle = '#fff';
+  context.textAlign = "center";
+  context.fillStyle = "#fff";
 
   context.fillText(titleText[0], 960, titleY);
 
@@ -77,7 +75,7 @@ export const generatePictureFromSegment = (segment: Segment): Promise<any> => {
       y = ((y - miny) / range) * scale;
       context.lineTo(x, y);
     });
-    context.strokeStyle = '#ffffff';
+    context.strokeStyle = "#ffffff";
     context.lineWidth = 2;
     context.stroke();
   }
@@ -99,7 +97,7 @@ const formatTitle = (name: string): string[] => {
     const secondLine = getMaxNextLine(firstLine.remainingChars);
     output = [firstLine.line];
     let fmSecondLine = secondLine.line;
-    if (secondLine.remainingChars.length > 0) fmSecondLine += ' ...';
+    if (secondLine.remainingChars.length > 0) fmSecondLine += " ...";
     output.push(fmSecondLine);
   }
   // If 40 characters or longer, add the entire second line, using a max of half the characters, making the first line always slightly shorter than the second
@@ -118,7 +116,7 @@ const formatTitle = (name: string): string[] => {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const getMaxNextLine = (input: any, maxChars = 20) => {
   // Split the string into an array of words
-  const allWords = input.split(' ');
+  const allWords = input.split(" ");
   // Find the index in the words array at which we should stop, or we will exceed maximum characters
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const lineIndex = allWords.reduce((prev: any, cur: string, index: number) => {
@@ -128,9 +126,9 @@ const getMaxNextLine = (input: any, maxChars = 20) => {
     return position >= maxChars ? { done: true, index } : { position, index };
   });
   // Using the index, build a string for this line
-  const line = allWords.slice(0, lineIndex.index).join(' ');
+  const line = allWords.slice(0, lineIndex.index).join(" ");
   // And determine what's left
-  const remainingChars = allWords.slice(lineIndex.index).join(' ');
+  const remainingChars = allWords.slice(lineIndex.index).join(" ");
   // Return the result
   return { line, remainingChars };
 };
