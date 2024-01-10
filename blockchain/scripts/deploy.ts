@@ -6,13 +6,15 @@ import { Buffer } from "node:buffer";
 
 interface Config {
   chainId: string;
-  abi: unknown;
   address: string;
+  abi: never;
 }
 
 interface NetworkConfig {
   networks: Config[];
 }
+
+const currentNetworks = networks as Config[];
 
 async function main() {
   console.log("Deploying StravaSegment...");
@@ -41,18 +43,18 @@ async function main() {
   const newConfig: Config = {
     chainId,
     address: stravaSegmentAddress,
-    abi: stravaSegmentJson.abi as unknown,
+    abi: stravaSegmentJson.abi as never,
   };
 
-  const index = networks.findIndex((network) => network.chainId === newConfig.chainId);
+  const index = currentNetworks.findIndex((network: Config) => network.chainId === newConfig.chainId);
 
   if (index < 0) {
-    networks[networks.length] = newConfig;
+    currentNetworks[networks.length] = newConfig;
   } else {
-    networks[index] = newConfig;
+    currentNetworks[index] = newConfig;
   }
 
-  const frontendConfig: NetworkConfig = { networks };
+  const frontendConfig: NetworkConfig = { networks: currentNetworks };
 
   const data = new Uint8Array(Buffer.from(JSON.stringify(frontendConfig, null, 2)));
 

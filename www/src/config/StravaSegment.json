@@ -2,7 +2,7 @@
   "networks": [
     {
       "chainId": "59140",
-      "address": "0xF93240df665EdE1570DD13d48F5590EAeE6bdA8C",
+      "address": "0x0cb56f201e7afe02e542e2d2d42c34d4ce7203f7",
       "abi": [
         {
           "inputs": [],
@@ -445,7 +445,7 @@
     },
     {
       "chainId": "11155111",
-      "address": "0x57eF9786133B946ea843AA384CAF911fDAEd1e12",
+      "address": "0x449f089F55663505ea8dcEfD3189022A0F9f1044",
       "abi": [
         {
           "inputs": [],
@@ -888,7 +888,7 @@
     },
     {
       "chainId": "5",
-      "address": "0x05926844CFb5864cA52DAd4f25B72C3a9C6f87Fb",
+      "address": "0x00CD7e97C60E33480008A0318aBB8AFB40fdd30E",
       "abi": [
         {
           "inputs": [],
