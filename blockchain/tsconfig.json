@@ -1,11 +1,5 @@
 {
   "extends": "../tsconfig.json",
-  "include": [
-    "**/*.ts",
-    "**/*.json"
-  ],
-  "exclude": [
-    "**/node_modules",
-    "typechain-types"
-  ]
+  "include": ["**/*.ts", "**/*.json"],
+  "exclude": ["**/node_modules", "typechain-types"],
 }

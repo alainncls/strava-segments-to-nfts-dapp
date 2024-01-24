@@ -1,26 +1,13 @@
-import { Button, Container, Modal } from 'react-bootstrap';
-import React, { useEffect, useMemo, useState } from 'react';
-import { generatePictureFromSegment } from '../../utils/segmentUtils';
-import {
-  Activity,
-  Config,
-  Metadata,
-  NetworkConfig,
-  RawSegment,
-  Segment,
-} from '../../types';
-import * as PolylineUtil from 'polyline-encoded';
-import { uploadToIPFS } from '../../utils/ipfsUtils';
-import {
-  useAccount,
-  useContractWrite,
-  useNetwork,
-  usePrepareContractWrite,
-  useWaitForTransaction,
-} from 'wagmi';
-import SegmentItem from './SegmentItem';
-import _StravaSegment from '../../config/StravaSegment.json';
-import { lineaTestnet } from 'wagmi/chains';
+import { Button, Container, Modal } from "react-bootstrap";
+import React, { useEffect, useMemo, useState } from "react";
+import { generatePictureFromSegment } from "../../utils/segmentUtils";
+import { Activity, Config, Metadata, NetworkConfig, RawSegment, Segment } from "../../types";
+import * as PolylineUtil from "polyline-encoded";
+import { uploadToIPFS } from "../../utils/ipfsUtils";
+import { useAccount, useContractWrite, useNetwork, usePrepareContractWrite, useWaitForTransaction } from "wagmi";
+import SegmentItem from "./SegmentItem";
+import _StravaSegment from "../../config/StravaSegment.json";
+import { lineaTestnet } from "wagmi/chains";
 
 const StravaSegment = _StravaSegment as NetworkConfig;
 
@@ -47,9 +34,7 @@ const SegmentsModal = (props: IProps) => {
   }, [chain]);
 
   const networkConfig: Config | undefined = useMemo(() => {
-    return StravaSegment.networks.find(
-      (network) => network.chainId === chainId
-    );
+    return StravaSegment.networks.find((network) => network.chainId === chainId);
   }, [chainId]);
 
   useEffect(() => {
@@ -63,21 +48,17 @@ const SegmentsModal = (props: IProps) => {
       const updatedSegments = await Promise.all(
         currentSegments.map(async (currentSegment) => {
           if (currentSegment.id === segment.id) {
-            currentSegment.polyline = PolylineUtil.decode(
-              (await getSegment(currentSegment.id)).map.polyline
-            );
-            currentSegment.picture =
-              await generatePictureFromSegment(currentSegment);
+            currentSegment.polyline = PolylineUtil.decode((await getSegment(currentSegment.id)).map.polyline);
+            currentSegment.picture = await generatePictureFromSegment(currentSegment);
           }
           return currentSegment;
-        })
+        }),
       );
       setCurrentSegments(updatedSegments);
     }
   };
 
-  const convertToBlob = async (content: string) =>
-    fetch(content).then((res) => res.blob());
+  const convertToBlob = async (content: string) => fetch(content).then((res) => res.blob());
 
   const uploadPictureToIpfs = async (segment: Segment) => {
     if (segment.picture) {
@@ -85,43 +66,35 @@ const SegmentsModal = (props: IProps) => {
     }
   };
 
-  const generateMetadata = (
-    segment: Segment,
-    pictureIpfs: string
-  ): Metadata => {
+  const generateMetadata = (segment: Segment, pictureIpfs: string): Metadata => {
     return {
       name: segment.title,
       image: pictureIpfs,
       attributes: [
         {
-          trait_type: 'Distance',
+          trait_type: "Distance",
           value: segment.distance,
         },
         {
-          trait_type: 'Strava ID',
+          trait_type: "Strava ID",
           value: segment.id,
         },
         {
-          trait_type: 'Name',
+          trait_type: "Name",
           value: segment.title,
         },
         {
-          trait_type: 'Type',
+          trait_type: "Type",
           value: segment.type,
         },
       ],
     };
   };
 
-  const uploadMetadataToIpfs = async (
-    metadata: Metadata,
-    segment: Segment
-  ): Promise<void> => {
+  const uploadMetadataToIpfs = async (metadata: Metadata, segment: Segment): Promise<void> => {
     const metadataIpfs = await uploadToIPFS(JSON.stringify(metadata));
 
-    const matchingSegment = currentSegments?.find(
-      (seg) => seg.id === segment.id
-    );
+    const matchingSegment = currentSegments?.find((seg) => seg.id === segment.id);
 
     if (matchingSegment) {
       matchingSegment.metadata = metadataIpfs;
@@ -133,7 +106,7 @@ const SegmentsModal = (props: IProps) => {
             seg = matchingSegment;
           }
           return seg;
-        })
+        }),
       );
     }
   };
@@ -141,7 +114,7 @@ const SegmentsModal = (props: IProps) => {
   const { config } = usePrepareContractWrite({
     address: networkConfig?.address,
     abi: networkConfig?.abi,
-    functionName: 'safeMint',
+    functionName: "safeMint",
     args: [address, segmentToMint?.metadata],
     enabled: Boolean(isConnected && address && segmentToMint?.metadata),
   });
@@ -152,21 +125,21 @@ const SegmentsModal = (props: IProps) => {
       setError(undefined);
     }
 
-    setLoadingStep('Generate picture');
+    setLoadingStep("Generate picture");
     await generatePicture(segment);
 
-    setLoadingStep('Upload picture to IPFS');
+    setLoadingStep("Upload picture to IPFS");
     const pictureIpfs = await uploadPictureToIpfs(segment);
 
     if (pictureIpfs) {
-      setLoadingStep('Generate metadata');
+      setLoadingStep("Generate metadata");
       const metadata = generateMetadata(segment, pictureIpfs);
 
-      setLoadingStep('Upload metadata to IPFS');
+      setLoadingStep("Upload metadata to IPFS");
       await uploadMetadataToIpfs(metadata, segment);
     } else {
       setLoadingStep(undefined);
-      setError('Error while uploading picture to IPFS');
+      setError("Error while uploading picture to IPFS");
     }
   };
 
@@ -177,15 +150,12 @@ const SegmentsModal = (props: IProps) => {
     }
   };
 
-  const { isLoading: isTransactionLoading, isSuccess: isTransactionSuccess } =
-    useWaitForTransaction({
-      hash: data?.hash,
-    });
+  const { isLoading: isTransactionLoading, isSuccess: isTransactionSuccess } = useWaitForTransaction({
+    hash: data?.hash,
+  });
 
   const getSegment = async (segmentId: number): Promise<RawSegment> => {
-    return await fetch(
-      `https://www.strava.com/api/v3/segments/${segmentId}?access_token=${accessToken}`
-    )
+    return await fetch(`https://www.strava.com/api/v3/segments/${segmentId}?access_token=${accessToken}`)
       .then((res) => res.json())
       .then((data) => {
         return data;
@@ -194,21 +164,15 @@ const SegmentsModal = (props: IProps) => {
   };
 
   return (
-    <Modal show={displayModal} onHide={onHide} size={'lg'} scrollable={true}>
+    <Modal show={displayModal} onHide={onHide} size={"lg"} scrollable={true}>
       <Modal.Header closeButton>
         <Modal.Title>{`Segments in ${activity?.name}`}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         {currentSegments?.map((segment, index) => (
-          <>
-            <Container key={`${segment.id + index}`}>
-              <SegmentItem
-                segment={segment}
-                prepareMinting={prepareMinting}
-                mintNft={mintNft}
-              />
-            </Container>
-          </>
+          <Container key={`${segment.id + index}`}>
+            <SegmentItem segment={segment} prepareMinting={prepareMinting} mintNft={mintNft} />
+          </Container>
         ))}
       </Modal.Body>
       <Modal.Footer>
