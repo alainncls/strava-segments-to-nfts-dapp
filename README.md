@@ -43,7 +43,7 @@ This project started as a centralized application, with a
 
 ### 2. Add your secret identifiers
 
-1. Copy the `.env` file to a `.env.local` file
+1. Copy the `.env.example` file to a `.env.local` file
 2. Fill it with your Strava application identifiers
 3. Fill it with your Infura identifiers for chain access
 4. Fill it with your Infura identifiers for IPFS access

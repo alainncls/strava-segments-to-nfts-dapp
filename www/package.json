@@ -1,5 +1,5 @@
 {
-  "name": "strava-segments-to-nfts-dapp-webapp",
+  "name": "wwwp",
   "version": "0.0.1",
   "description": "Decentralized application aiming to generate an NFT for each new unique and eligible segment a Strava user runs\nthrough. ",
   "homepage": "https://alainncls.github.io/strava-segments-to-nfts-dapp",
@@ -50,6 +50,7 @@
     "@vitest/coverage-v8": "^0.34.6",
     "@vitest/ui": "^0.34.7",
     "jsdom": "^22.1.0",
+    "typescript": "^5.3.3",
     "vite": "^4.5.2",
     "vite-plugin-svgr": "^4.2.0",
     "vite-tsconfig-paths": "^4.3.1",

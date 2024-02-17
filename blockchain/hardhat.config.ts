@@ -2,7 +2,7 @@ import { HardhatUserConfig } from "hardhat/config";
 import "@nomicfoundation/hardhat-toolbox";
 import dotenv from "dotenv";
 
-dotenv.config({ path: "./.env" });
+dotenv.config({ path: "./.env.example" });
 const config: HardhatUserConfig = {
   solidity: "0.8.21",
   defaultNetwork: "linea-goerli",

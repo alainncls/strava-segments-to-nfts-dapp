@@ -3,9 +3,11 @@
 **/coverage
 **/build
 .DS_Store
-.env.local
-blockchain/.env
+.env
+.env.*
+!.env.example
 dist
 cache
 typechain-types
 artifacts
+tsconfig.tsbuildinfo
