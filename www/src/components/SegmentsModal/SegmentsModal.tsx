@@ -1,13 +1,13 @@
 import { Button, Container, Modal } from "react-bootstrap";
 import React, { useEffect, useMemo, useState } from "react";
 import { generatePictureFromSegment } from "../../utils/segmentUtils";
-import { Activity, Config, Metadata, NetworkConfig, RawSegment, Segment } from "../../types";
+import { Activity, Metadata, NetworkConfig, RawSegment, Segment } from "../../types";
 import * as PolylineUtil from "polyline-encoded";
 import { uploadToIPFS } from "../../utils/ipfsUtils";
-import { useAccount, useContractWrite, useNetwork, usePrepareContractWrite, useWaitForTransaction } from "wagmi";
+import { useAccount, useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 import SegmentItem from "./SegmentItem";
 import _StravaSegment from "../../config/StravaSegment.json";
-import { lineaTestnet } from "wagmi/chains";
+import { defaultConfig } from "../../config/defaultConfig";
 
 const StravaSegment = _StravaSegment as NetworkConfig;
 
@@ -21,21 +21,18 @@ interface IProps {
 const SegmentsModal = (props: IProps) => {
   const { displayModal, activity, onHide, accessToken } = props;
 
-  const { address, isConnected } = useAccount();
-  const { chain } = useNetwork();
+  const { address, isConnected, chainId } = useAccount();
 
   const [currentSegments, setCurrentSegments] = useState(activity?.segments);
   const [loadingStep, setLoadingStep] = useState<string>();
   const [error, setError] = useState<string>();
   const [segmentToMint, setSegmentToMint] = useState<Segment>();
 
-  const chainId = useMemo(() => {
-    return chain ? `${chain.id.toString()}` : lineaTestnet.id.toString();
-  }, [chain]);
-
-  const networkConfig: Config | undefined = useMemo(() => {
-    return StravaSegment.networks.find((network) => network.chainId === chainId);
+  const networkConfig = useMemo(() => {
+    return StravaSegment.networks.find((network) => network.chainId === chainId?.toString()) || defaultConfig;
   }, [chainId]);
+
+  const { data: hash, isPending, writeContract } = useWriteContract();
 
   useEffect(() => {
     if (activity?.segments) {
@@ -111,15 +108,6 @@ const SegmentsModal = (props: IProps) => {
     }
   };
 
-  const { config } = usePrepareContractWrite({
-    address: networkConfig?.address,
-    abi: networkConfig?.abi,
-    functionName: "safeMint",
-    args: [address, segmentToMint?.metadata],
-    enabled: Boolean(isConnected && address && segmentToMint?.metadata),
-  });
-  const { data, write } = useContractWrite(config);
-
   const prepareMinting = async (segment: Segment) => {
     if (error) {
       setError(undefined);
@@ -144,14 +132,17 @@ const SegmentsModal = (props: IProps) => {
   };
 
   const mintNft = async () => {
-    if (write) {
-      write();
-      setLoadingStep(undefined);
-    }
+    writeContract({
+      address: networkConfig.address,
+      abi: networkConfig.abi,
+      functionName: "safeMint",
+      args: [address, segmentToMint?.metadata],
+    });
+    setLoadingStep(undefined);
   };
 
-  const { isLoading: isTransactionLoading, isSuccess: isTransactionSuccess } = useWaitForTransaction({
-    hash: data?.hash,
+  const { isLoading: isConfirming, isSuccess: isConfirmed } = useWaitForTransactionReceipt({
+    hash,
   });
 
   const getSegment = async (segmentId: number): Promise<RawSegment> => {
@@ -177,13 +168,13 @@ const SegmentsModal = (props: IProps) => {
       </Modal.Body>
       <Modal.Footer>
         {loadingStep && <p>{loadingStep}</p>}
-        {isTransactionLoading && (
+        {(isPending || isConfirming) && (
           <>
             <i className="bi bi-cloud-upload text-warning" />
             <p>Transaction in progress...</p>
           </>
         )}
-        {isTransactionSuccess && (
+        {isConfirmed && (
           <>
             <i className="bi bi-check-circle text-success" />
             <p>Transaction successful</p>
