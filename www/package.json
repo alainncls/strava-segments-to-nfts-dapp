@@ -1,5 +1,5 @@
 {
-  "name": "wwwp",
+  "name": "www",
   "version": "0.0.1",
   "description": "Decentralized application aiming to generate an NFT for each new unique and eligible segment a Strava user runs\nthrough. ",
   "homepage": "https://alainncls.github.io/strava-segments-to-nfts-dapp",
@@ -32,6 +32,7 @@
     "bootstrap-icons": "^1.11.3",
     "canvas": "^2.11.2",
     "jazzicon-ts": "^2.0.0",
+    "node-fetch": "^3.3.2",
     "polyline-encoded": "^0.0.9",
     "react": "^18.2.0",
     "react-bootstrap": "^2.10.0",

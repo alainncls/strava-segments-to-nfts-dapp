@@ -1,0 +1,5 @@
+[dev]
+command = "pnpm start"
+functions = "functions"
+publish = "public"
+port = 8888

@@ -11,3 +11,6 @@ cache
 typechain-types
 artifacts
 tsconfig.tsbuildinfo
+
+# Local Netlify folder
+.netlify

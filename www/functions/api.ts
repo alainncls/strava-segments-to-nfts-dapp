@@ -1,11 +1,31 @@
 import fetch from "node-fetch";
 
-const STRAVA_CLIENT_SECRET = process.env.STRAVA_CLIENT_SECRET;
 const STRAVA_CLIENT_ID = process.env.STRAVA_CLIENT_ID;
+const STRAVA_CLIENT_SECRET = process.env.STRAVA_CLIENT_SECRET;
 
 export async function handler(event: { queryStringParameters: any; body: string }) {
   let params = event.queryStringParameters;
   let jsonBody;
+
+  console.log("STRAVA_CLIENT_ID", STRAVA_CLIENT_ID);
+
+  if (!STRAVA_CLIENT_ID) {
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        message: "Strava client ID not set",
+      }),
+    };
+  }
+
+  if (!STRAVA_CLIENT_SECRET) {
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        message: "Strava client secret not set",
+      }),
+    };
+  }
 
   if (event.body) {
     try {
@@ -20,6 +40,8 @@ export async function handler(event: { queryStringParameters: any; body: string 
     ...params,
     ...jsonBody,
   };
+
+  console.log("params", params);
 
   if (params.code) {
     // exchange code for token
@@ -70,6 +92,8 @@ async function getToken(code: string) {
     grant_type: "authorization_code",
   });
 
+  console.log("body", body);
+
   const response = await fetch("https://www.strava.com/api/v3/oauth/token", {
     method: "POST",
     headers: {
@@ -77,6 +101,7 @@ async function getToken(code: string) {
     },
     body,
   });
+  //console.log("response", response.json());
 
   return await response.json();
 }
