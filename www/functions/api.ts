@@ -3,11 +3,22 @@ import fetch from "node-fetch";
 const STRAVA_CLIENT_ID = process.env.STRAVA_CLIENT_ID;
 const STRAVA_CLIENT_SECRET = process.env.STRAVA_CLIENT_SECRET;
 
-export async function handler(event: { queryStringParameters: any; body: string }) {
+export async function handler(event: { queryStringParameters: any; body: string; httpMethod: string }) {
+  if (event.httpMethod == "OPTIONS") {
+    console.log("IF OPTIONS");
+
+    return {
+      statusCode: 200,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Headers": "Content-Type",
+        "Access-Control-Allow-Methods": "POST, OPTIONS",
+      },
+    };
+  }
+
   let params = event.queryStringParameters;
   let jsonBody;
-
-  console.log("STRAVA_CLIENT_ID", STRAVA_CLIENT_ID);
 
   if (!STRAVA_CLIENT_ID) {
     return {
@@ -41,11 +52,10 @@ export async function handler(event: { queryStringParameters: any; body: string 
     ...jsonBody,
   };
 
-  console.log("params", params);
-
   if (params.code) {
-    // exchange code for token
-    let token = await getToken(params.code);
+    console.log("METHOD = CODE");
+    const token = await getToken(params.code);
+    console.log("token", token);
     return {
       statusCode: 200,
       body: JSON.stringify({
@@ -55,7 +65,9 @@ export async function handler(event: { queryStringParameters: any; body: string 
   }
 
   if (params.method === "refresh") {
-    let token = await refreshToken(params.token);
+    console.log("METHOD = REFRESH");
+    const token = await refreshToken(params.token);
+    console.log("token", token);
     return {
       statusCode: 200,
       body: JSON.stringify({
@@ -72,6 +84,8 @@ async function refreshToken(oldToken: { refresh_token: string }) {
     grant_type: "refresh_token",
     refresh_token: oldToken.refresh_token,
   });
+
+  console.log("body", body);
 
   const response = await fetch("https://www.strava.com/api/v3/oauth/token", {
     method: "POST",
@@ -101,7 +115,6 @@ async function getToken(code: string) {
     },
     body,
   });
-  //console.log("response", response.json());
 
   return await response.json();
 }
