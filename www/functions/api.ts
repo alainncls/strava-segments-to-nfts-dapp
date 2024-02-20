@@ -4,16 +4,20 @@ const STRAVA_CLIENT_ID = process.env.STRAVA_CLIENT_ID;
 const STRAVA_CLIENT_SECRET = process.env.STRAVA_CLIENT_SECRET;
 
 export async function handler(event: { queryStringParameters: any; body: string; httpMethod: string }) {
+  const headers = {
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "POST, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type",
+    "Content-Type": "application/json",
+  };
+
   if (event.httpMethod == "OPTIONS") {
     console.log("IF OPTIONS");
 
     return {
-      statusCode: 200,
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Headers": "Content-Type",
-        "Access-Control-Allow-Methods": "POST, OPTIONS",
-      },
+      statusCode: 204,
+      headers,
+      body: "",
     };
   }
 
@@ -58,6 +62,7 @@ export async function handler(event: { queryStringParameters: any; body: string;
     console.log("token", token);
     return {
       statusCode: 200,
+      headers,
       body: JSON.stringify({
         token,
       }),
@@ -70,6 +75,7 @@ export async function handler(event: { queryStringParameters: any; body: string;
     console.log("token", token);
     return {
       statusCode: 200,
+      headers,
       body: JSON.stringify({
         token,
       }),
