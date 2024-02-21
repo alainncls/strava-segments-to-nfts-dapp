@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import { Container } from 'react-bootstrap';
-import Loader from '../../components/Loader/Loader';
-import Header from '../../components/Header/Header';
-import Activities from '../../components/Activities/Activities';
-import SegmentsModal from '../../components/SegmentsModal/SegmentsModal';
-import Footer from '../../components/Footer/Footer';
-import { computeDistance, isKnownType } from '../../utils/segmentUtils';
-import { Activity, Segment, SegmentEffort } from '../../types';
+import React, { useEffect, useState } from "react";
+import { Container } from "react-bootstrap";
+import Loader from "../../components/Loader/Loader";
+import Header from "../../components/Header/Header";
+import Activities from "../../components/Activities/Activities";
+import SegmentsModal from "../../components/SegmentsModal/SegmentsModal";
+import Footer from "../../components/Footer/Footer";
+import { computeDistance, isKnownType } from "../../utils/segmentUtils";
+import { Activity, Segment, SegmentEffort } from "../../types";
 
 const Home = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -19,19 +19,22 @@ const Home = () => {
 
   useEffect(() => {
     if (refreshToken && !isTokenValid()) {
-      const clientID = import.meta.env.VITE_STRAVA_CLIENT_ID;
-      const clientSecret = import.meta.env.VITE_STRAVA_CLIENT_SECRET;
-      fetch(
-        `https://www.strava.com/oauth/token?client_id=${clientID}&client_secret=${clientSecret}&refresh_token=${refreshToken}&grant_type=refresh_token`,
-        {
-          method: 'POST',
-        }
-      )
-        .then((res) => res.json())
+      fetch(`https://strava.alainnicolas.fr/.netlify/functions/api?token=${refreshToken}`, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        method: "POST",
+      })
+        .then((res) => {
+          if (!res.ok) {
+            throw new Error(`HTTP error! status: ${res.status}`);
+          }
+          return res.json();
+        })
         .then((result) => {
-          sessionStorage.setItem('refreshToken', result.refresh_token);
-          sessionStorage.setItem('accessToken', result.access_token);
-          sessionStorage.setItem('tokenCreationDate', Date().toString());
+          sessionStorage.setItem("refreshToken", result.token.refresh_token);
+          sessionStorage.setItem("accessToken", result.token.access_token);
+          sessionStorage.setItem("tokenCreationDate", Date().toString());
           setRefreshToken(result.refresh_token);
           setAccessToken(result.access_token);
         })
@@ -42,17 +45,17 @@ const Home = () => {
   }, [refreshToken, tokenCreationDate]);
 
   useEffect(() => {
-    const access = sessionStorage.getItem('accessToken');
-    if (access && access !== 'undefined') {
+    const access = sessionStorage.getItem("accessToken");
+    if (access && access !== "undefined") {
       setAccessToken(access);
     }
 
-    const refresh = sessionStorage.getItem('refreshToken');
-    if (refresh && refresh !== 'undefined') {
+    const refresh = sessionStorage.getItem("refreshToken");
+    if (refresh && refresh !== "undefined") {
       setRefreshToken(refresh);
     }
 
-    const creationDate = sessionStorage.getItem('tokenCreationDate');
+    const creationDate = sessionStorage.getItem("tokenCreationDate");
     if (creationDate) {
       setTokenCreationDate(new Date(creationDate));
     }
@@ -62,9 +65,7 @@ const Home = () => {
   useEffect(() => {
     if (accessToken && isTokenValid()) {
       setIsLoading(true);
-      fetch(
-        `https://www.strava.com/api/v3/athlete/activities?access_token=${accessToken}`
-      )
+      fetch(`https://www.strava.com/api/v3/athlete/activities?access_token=${accessToken}`)
         .then((res) => res.json())
         .then((data) => {
           setActivities(data);
@@ -77,10 +78,7 @@ const Home = () => {
   }, [accessToken, tokenCreationDate]);
 
   const isTokenValid = () => {
-    return (
-      tokenCreationDate &&
-      tokenCreationDate.getTime() > new Date().getTime() - 6 * 3600 * 1000
-    );
+    return tokenCreationDate && tokenCreationDate.getTime() > new Date().getTime() - 6 * 3600 * 1000;
   };
 
   const checkForSegments = async (activityId: string) => {
@@ -89,9 +87,7 @@ const Home = () => {
 
       let segments: Segment[] = [];
 
-      fetch(
-        `https://www.strava.com/api/v3/activities/${activityId}?access_token=${accessToken}`
-      )
+      fetch(`https://www.strava.com/api/v3/activities/${activityId}?access_token=${accessToken}`)
         .then((res) => res.json())
         .then(async (data) => {
           const segmentEfforts = data.segment_efforts;
@@ -104,16 +100,12 @@ const Home = () => {
                   distance: computeDistance(segmentEffort.segment.distance),
                   type: isKnownType(segmentEffort.segment.activity_type)
                     ? segmentEffort.segment.activity_type
-                    : 'default',
+                    : "default",
                 };
-              })
+              }),
             );
             segments = rawSegments.filter((currentSegment, index, self) => {
-              return (
-                self.findIndex(
-                  (segment) => segment.id === currentSegment.id
-                ) === index
-              );
+              return self.findIndex((segment) => segment.id === currentSegment.id) === index;
             });
           }
         })
@@ -125,7 +117,7 @@ const Home = () => {
                 activity.segments = segments;
               }
               return activity;
-            })
+            }),
           );
           setIsLoading(false);
         });
@@ -133,9 +125,7 @@ const Home = () => {
   };
 
   const displaySegments = (activityId: string) => {
-    setCurrentActivity(
-      activities.find((activity) => activity.id === activityId)
-    );
+    setCurrentActivity(activities.find((activity) => activity.id === activityId));
     setShowModal(true);
   };
 
@@ -149,7 +139,7 @@ const Home = () => {
       <Loader loading={isLoading} />
       <Container className="p-3">
         <Header isStravaConnected={!!accessToken} />
-        <div className={'mb-5'}>
+        <div className={"mb-5"}>
           {!!(accessToken && activities.length) && (
             <>
               <Activities
