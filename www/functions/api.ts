@@ -3,7 +3,11 @@ import fetch from "node-fetch";
 const STRAVA_CLIENT_ID = process.env.STRAVA_CLIENT_ID;
 const STRAVA_CLIENT_SECRET = process.env.STRAVA_CLIENT_SECRET;
 
-export async function handler(event: { queryStringParameters: any; body: string; httpMethod: string }) {
+export async function handler(event: {
+  queryStringParameters: { code: string; method: string; token: { refresh_token: string } };
+  body: string;
+  httpMethod: string;
+}) {
   const headers = {
     "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Methods": "POST, OPTIONS",
@@ -12,8 +16,6 @@ export async function handler(event: { queryStringParameters: any; body: string;
   };
 
   if (event.httpMethod == "OPTIONS") {
-    console.log("IF OPTIONS");
-
     return {
       statusCode: 204,
       headers,
@@ -46,7 +48,7 @@ export async function handler(event: { queryStringParameters: any; body: string;
     try {
       jsonBody = JSON.parse(event.body);
     } catch (err) {
-      console.log(`ERROR PARSING "${event.body}"`);
+      console.error(`ERROR PARSING "${event.body}"`);
       throw err;
     }
   }
@@ -57,9 +59,7 @@ export async function handler(event: { queryStringParameters: any; body: string;
   };
 
   if (params.code) {
-    console.log("METHOD = CODE");
     const token = await getToken(params.code);
-    console.log("token", token);
     return {
       statusCode: 200,
       headers,
@@ -70,9 +70,7 @@ export async function handler(event: { queryStringParameters: any; body: string;
   }
 
   if (params.method === "refresh") {
-    console.log("METHOD = REFRESH");
     const token = await refreshToken(params.token);
-    console.log("token", token);
     return {
       statusCode: 200,
       headers,
@@ -90,8 +88,6 @@ async function refreshToken(oldToken: { refresh_token: string }) {
     grant_type: "refresh_token",
     refresh_token: oldToken.refresh_token,
   });
-
-  console.log("body", body);
 
   const response = await fetch("https://www.strava.com/api/v3/oauth/token", {
     method: "POST",
@@ -111,8 +107,6 @@ async function getToken(code: string) {
     code,
     grant_type: "authorization_code",
   });
-
-  console.log("body", body);
 
   const response = await fetch("https://www.strava.com/api/v3/oauth/token", {
     method: "POST",

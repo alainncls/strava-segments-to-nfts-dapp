@@ -21,7 +21,7 @@ interface IProps {
 const SegmentsModal = (props: IProps) => {
   const { displayModal, activity, onHide, accessToken } = props;
 
-  const { address, isConnected, chainId } = useAccount();
+  const { address, chainId } = useAccount();
 
   const [currentSegments, setCurrentSegments] = useState(activity?.segments);
   const [loadingStep, setLoadingStep] = useState<string>();
@@ -29,7 +29,7 @@ const SegmentsModal = (props: IProps) => {
   const [segmentToMint, setSegmentToMint] = useState<Segment>();
 
   const networkConfig = useMemo(() => {
-    return StravaSegment.networks.find((network) => network.chainId === chainId?.toString()) || defaultConfig;
+    return StravaSegment.networks.find((network) => network.chainId === chainId?.toString()) ?? defaultConfig;
   }, [chainId]);
 
   const { data: hash, isPending, writeContract } = useWriteContract();

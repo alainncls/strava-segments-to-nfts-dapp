@@ -1,6 +1,6 @@
-import React from 'react';
-import { Button, Card } from 'react-bootstrap';
-import { Activity } from '../../types';
+import React from "react";
+import { Button, Card } from "react-bootstrap";
+import { Activity } from "../../types";
 
 interface IProps {
   activities: Activity[];
@@ -17,30 +17,25 @@ const Activities = (props: IProps) => {
         <div className="col-sm-6 mb-3" key={activity.id}>
           <Card>
             <Card.Header>
-              <Card.Title className={'mb-0'}>
-                {activity.name}{' '}
+              <Card.Title className={"mb-0"}>
+                {activity.name}{" "}
                 <a
                   href={`https://www.strava.com/activities/${activity.id}`}
                   target="_blank"
                   rel="noreferrer"
-                  className={'text-decoration-none fs-6'}
+                  className={"text-decoration-none fs-6"}
                 >
                   (View on Strava)
                 </a>
               </Card.Title>
             </Card.Header>
             <Card.Body>
-              <div>
-                {new Date(Date.parse(activity.start_date)).toLocaleDateString()}
-              </div>
+              <div>{new Date(Date.parse(activity.start_date)).toLocaleDateString()}</div>
             </Card.Body>
-            <Card.Footer className={'d-flex'}>
+            <Card.Footer className={"d-flex"}>
               <div>
                 {!activity.segments && (
-                  <Button
-                    className="btn btn-primary btn-sm"
-                    onClick={() => checkForSegments(activity.id)}
-                  >
+                  <Button className="btn btn-primary btn-sm" onClick={() => checkForSegments(activity.id)}>
                     Check for eligible segments
                   </Button>
                 )}

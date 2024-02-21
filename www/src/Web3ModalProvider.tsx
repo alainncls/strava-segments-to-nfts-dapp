@@ -1,9 +1,10 @@
+import React, { ReactNode } from "react";
+
 import { createWeb3Modal } from "@web3modal/wagmi/react";
 
 import { WagmiProvider } from "wagmi";
 import { lineaTestnet } from "wagmi/chains";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ReactNode } from "react";
 
 import LineaMainnetIcon from "./assets/linea-mainnet.svg";
 import LineaTestnetIcon from "./assets/linea-testnet.svg";
