@@ -45,9 +45,7 @@ This project started as a centralized application, with a
 
 1. Copy the `.env.example` file to a `.env.local` file
 2. Fill it with your Strava application identifiers
-3. Fill it with your Infura identifiers for chain access
-4. Fill it with your Infura identifiers for IPFS access
-5. Fill it with the address of the contract you deployed previously
+3. Fill it with your Pinata identifiers for IPFS access
 
 ### 3. Install dependencies
 

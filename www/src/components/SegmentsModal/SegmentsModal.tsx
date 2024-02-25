@@ -55,7 +55,9 @@ const SegmentsModal = (props: IProps) => {
     }
   };
 
-  const convertToBlob = async (content: string) => fetch(content).then((res) => res.blob());
+  const convertToBlob = async (content: string) => {
+    return new Blob([content], { type: "application/json" });
+  };
 
   const uploadPictureToIpfs = async (segment: Segment) => {
     if (segment.picture) {
@@ -89,7 +91,7 @@ const SegmentsModal = (props: IProps) => {
   };
 
   const uploadMetadataToIpfs = async (metadata: Metadata, segment: Segment): Promise<void> => {
-    const metadataIpfs = await uploadToIPFS(JSON.stringify(metadata));
+    const metadataIpfs = await uploadToIPFS(await convertToBlob(JSON.stringify(metadata)));
 
     const matchingSegment = currentSegments?.find((seg) => seg.id === segment.id);
 
