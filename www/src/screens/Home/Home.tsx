@@ -13,7 +13,7 @@ const Home = () => {
   const [activities, setActivities] = useState<Activity[]>([]);
   const [refreshToken, setRefreshToken] = useState<string>();
   const [accessToken, setAccessToken] = useState<string>();
-  const [tokenCreationDate, setTokenCreationDate] = useState<Date>();
+  const [tokenExpirationDate, setTokenExpirationDate] = useState<Date>();
   const [currentActivity, setCurrentActivity] = useState<Activity>();
   const [showModal, setShowModal] = useState(false);
 
@@ -34,15 +34,15 @@ const Home = () => {
         .then((result) => {
           sessionStorage.setItem("refreshToken", result.token.refresh_token);
           sessionStorage.setItem("accessToken", result.token.access_token);
-          sessionStorage.setItem("tokenCreationDate", Date().toString());
-          setRefreshToken(result.refresh_token);
-          setAccessToken(result.access_token);
+          sessionStorage.setItem("tokenExpirationDate", result.token.expires_at + result.token.expires_in);
+          setRefreshToken(result.token.refresh_token);
+          setAccessToken(result.token.access_token);
         })
         .catch((err) => {
           console.error(err);
         });
     }
-  }, [refreshToken, tokenCreationDate]);
+  }, [refreshToken, tokenExpirationDate]);
 
   useEffect(() => {
     const access = sessionStorage.getItem("accessToken");
@@ -55,9 +55,9 @@ const Home = () => {
       setRefreshToken(refresh);
     }
 
-    const creationDate = sessionStorage.getItem("tokenCreationDate");
-    if (creationDate) {
-      setTokenCreationDate(new Date(creationDate));
+    const expirationDate = sessionStorage.getItem("tokenExpirationDate");
+    if (expirationDate) {
+      setTokenExpirationDate(new Date(expirationDate));
     }
   }, []);
 
@@ -75,10 +75,10 @@ const Home = () => {
     } else {
       setIsLoading(false);
     }
-  }, [accessToken, tokenCreationDate]);
+  }, [accessToken, tokenExpirationDate]);
 
   const isTokenValid = () => {
-    return tokenCreationDate && tokenCreationDate.getTime() > new Date().getTime() - 6 * 3600 * 1000;
+    return tokenExpirationDate && tokenExpirationDate.getTime() > new Date().getTime() - 6 * 3600 * 1000;
   };
 
   const checkForSegments = async (activityId: string) => {

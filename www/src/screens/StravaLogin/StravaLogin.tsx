@@ -31,9 +31,11 @@ const StravaLogin = () => {
           return res.json();
         })
         .then((result) => {
+          //console.log("result", result);
+          console.log("result.token", result.token);
           sessionStorage.setItem("refreshToken", result.token.refresh_token);
           sessionStorage.setItem("accessToken", result.token.access_token);
-          sessionStorage.setItem("tokenCreationDate", Date().toString());
+          sessionStorage.setItem("tokenExpirationDate", result.token.expires_at + result.token.expires_in);
           navigate("/");
         })
         .catch((err) => {

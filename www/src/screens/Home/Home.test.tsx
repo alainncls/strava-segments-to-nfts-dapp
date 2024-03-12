@@ -46,7 +46,7 @@ test("renders home component with login button if no token", () => {
 test("renders home component with activities if the access token is found", async () => {
   window.sessionStorage.setItem("accessToken", "accessToken");
   window.sessionStorage.setItem("refreshToken", "refreshToken");
-  window.sessionStorage.setItem("tokenCreationDate", Date().toString());
+  window.sessionStorage.setItem("tokenExpirationDate", Date().toString());
 
   render(
     <MemoryRouter initialEntries={[{ pathname: "/" }]}>
@@ -72,7 +72,7 @@ test("renders home component with activities if the access token is found", asyn
 test("renders home component with token refreshing feature", async () => {
   window.sessionStorage.setItem("accessToken", "accessToken");
   window.sessionStorage.setItem("refreshToken", "refreshToken");
-  window.sessionStorage.setItem("tokenCreationDate", new Date("Wed Jun 07 2022 22:42:25").toString());
+  window.sessionStorage.setItem("tokenExpirationDate", new Date("Wed Jun 07 2022 22:42:25").toString());
 
   global.fetch = vi.fn(() =>
     Promise.resolve({
@@ -99,7 +99,7 @@ test("renders home component with token refreshing feature", async () => {
 test("renders home component able to find segments in activities", async () => {
   window.sessionStorage.setItem("accessToken", "accessToken");
   window.sessionStorage.setItem("refreshToken", "refreshToken");
-  window.sessionStorage.setItem("tokenCreationDate", Date().toString());
+  window.sessionStorage.setItem("tokenExpirationDate", Date().toString());
 
   render(
     <MemoryRouter initialEntries={[{ pathname: "/" }]}>
