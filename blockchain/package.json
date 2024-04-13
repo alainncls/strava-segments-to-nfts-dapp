@@ -19,6 +19,6 @@
     "hardhat": "^2.22.2",
     "solhint": "^3.6.2",
     "ts-node": "^10.9.2",
-    "typescript": "^5.4.3"
+    "typescript": "^5.4.5"
   }
 }
